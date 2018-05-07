@@ -489,7 +489,7 @@ babel-helper-replace-supers@^6.24.1:
     babel-traverse "^6.24.1"
     babel-types "^6.24.1"
 
-babel-helper-vue-jsx-merge-props@^2.0.3:
+babel-helper-vue-jsx-merge-props@^2.0.2, babel-helper-vue-jsx-merge-props@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/babel-helper-vue-jsx-merge-props/-/babel-helper-vue-jsx-merge-props-2.0.3.tgz#22aebd3b33902328e513293a8e4992b384f9f1b6"
 
@@ -3330,6 +3330,10 @@ isobject@^3.0.0, isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
 
+jquery@x.*:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
+
 js-base64@^2.1.9:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.4.3.tgz#2e545ec2b0f2957f41356510205214e98fad6582"
@@ -5081,6 +5085,20 @@ selfsigned@^1.9.1:
   resolved "https://registry.yarnpkg.com/selfsigned/-/selfsigned-1.10.3.tgz#d628ecf9e3735f84e8bafba936b3cf85bea43823"
   dependencies:
     node-forge "0.7.5"
+
+semantic-ui-css@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/semantic-ui-css/-/semantic-ui-css-2.3.1.tgz#a5485c640c98cce29d8ddde3eff3434566a068e0"
+  dependencies:
+    jquery x.*
+
+semantic-ui-vue@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/semantic-ui-vue/-/semantic-ui-vue-0.2.8.tgz#4c823d2549d19149979746119e5a08a8af2799d0"
+  dependencies:
+    babel-helper-vue-jsx-merge-props "^2.0.2"
+    babel-runtime "^6.26.0"
+    lodash "^4.17.4"
 
 "semver@2 || 3 || 4 || 5", semver@^5.3.0, semver@^5.4.1:
   version "5.5.0"
