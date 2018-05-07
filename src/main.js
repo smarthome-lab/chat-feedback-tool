@@ -3,6 +3,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import SuiVue from 'semantic-ui-vue'
+import 'semantic-ui-css/semantic.min.css'
 
 Vue.config.productionTip = false
 
@@ -13,3 +15,4 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+Vue.use(SuiVue)
