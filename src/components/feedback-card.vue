@@ -1,7 +1,7 @@
 <template>
   <sui-card :key="feedback.id">
     <sui-card-content>
-      <sui-card-meta>{{feedback.createdAt}}</sui-card-meta>
+      <sui-card-meta>{{time}}</sui-card-meta>
       <sui-card-description>
         <p>
           {{feedback.text}}
@@ -44,7 +44,7 @@
 </template>
 
 <script>
-  import {feathersClient} from '../feathers-client'
+  import moment from 'moment'
 
   export default {
     name: "feedback-card",
@@ -73,6 +73,11 @@
           {key: 'bug', text: 'bug', value: 'bug'},
           {key: 'enhansmant', text: 'verbesserung', value: 'verbesserung'},
         ],
+      }
+    },
+    computed: {
+      time: function () {
+        return moment(this.feedback.createdAt).format('DD.MM.YYYY [um] hh:mm')
       }
     },
     methods: {
