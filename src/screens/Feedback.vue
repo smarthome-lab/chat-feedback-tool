@@ -7,50 +7,9 @@
                   :onClick=updatePage />
 
       <sui-card-group :items-per-row="3" stackable>
-        <sui-card v-for="feedback in feedbacks.data" :key="feedback.id">
-          <sui-card-content>
-            <sui-card-meta>{{feedback.createdAt}}</sui-card-meta>
-            <sui-card-description>
-              <p>
-                {{feedback.text}}
-              </p>
-            </sui-card-description>
-          </sui-card-content>
-          <sui-card-content extra>
-            <div class="tags">
-              <sui-dropdown
-                multiple
-                fluid
-                :options="defaultTags"
-                placeholder="Tags"
-                search
-                selection
-                allowAdditions
-                v-model="currentTags"
-                :v-on:change=tagsChanged(feedback.id)
-              />
-            </div>
-            <span slot="right">
-            <!--<sui-button negative compact icon="thumbs down outline" />-->
-            <sui-button-group>
-              <sui-button v-if="feedback.important || feedback.important===null"
-                          @click="patchFeedback(feedback.id, {important: true})" positive
-                          icon="thumbs up outline"/>
-              <sui-button v-if="!feedback.important && feedback.important!==null"
-                          @click="patchFeedback(feedback.id, {important: true})"
-                          icon="thumbs up outline"/>
-              <sui-button-or/>
-              <sui-button v-if="!feedback.important || feedback.important===null"
-                          @click="patchFeedback(feedback.id, {important: false})" negative
-                          icon="thumbs down outline"/>
-              <sui-button v-if="feedback.important && feedback.important!==null"
-                          @click="patchFeedback(feedback.id, {important: false})"
-                          icon="thumbs down outline"/>
-            </sui-button-group>
-          </span>
-          </sui-card-content>
-        </sui-card>
+        <feedback-card v-for="feedback in feedbacks.data" v-bind:feedback=feedback :patchFeedback=patchFeedback />
       </sui-card-group>
+
       <pagination class="pagination" v-bind:page=page v-bind:total="feedbacks.total" v-bind:resultsPerPage=results
                   :onClick=updatePage />
 
@@ -62,9 +21,13 @@
 
   import {feathersClient} from '../feathers-client'
   import {mapGetters, mapMutations} from 'vuex'
+  import FeedbackCard from '../components/feedback-card'
 
   export default {
     name: 'Feedback',
+    components: {
+      FeedbackCard,
+    },
     data() {
       return {
         loading: true,
@@ -74,21 +37,9 @@
         feedbacks: [],
         page: 1,
         results: 6,
-        currentTags: null,
-        defaultTags: [
-          {key: 'chat', text: 'Chat', value: 'chat'},
-          {key: 'groupchat', text: 'Gruppenchat', value: 'groupchat'},
-          {key: 'solochat', text: 'Solochat', value: 'solochat'},
-          {key: 'profile', text: 'Profil', value: 'profil'},
-          {key: 'bug', text: 'bug', value: 'bug'},
-          {key: 'enhansmant', text: 'verbesserung', value: 'verbesserung'},
-        ],
       }
     },
     methods: {
-      test() {
-        console.log('feedback current user', this.getUser())
-      },
       ...mapGetters([
         'getUser'
       ]),
@@ -116,7 +67,7 @@
             }
           }
         }).then((feedback) => {
-          this.feedbacks = feedback
+          this.feedbacks= feedback
           this.loading = false
           console.log('Feedback!', this.feedbacks)
         });
@@ -133,16 +84,6 @@
           console.log(e)
         });
       },
-      tagsChanged(id, tags){
-        console.log(id, tags)
-        let i = this.feedbacks.data.findIndex((obj) => obj.id === id)
-        //console.log(this.feedbacks.data[i])
-      }
-    },
-    watch: {
-      'currentTags': function(val, oldVal){
-        console.log('FEEDBACK TAAAAGS WUP WUP', val, oldVal);
-      }
     },
     beforeMount() {
       this.loadFeedback()
@@ -151,11 +92,7 @@
 
 </script>
 
-<style>
-  .tags {
-    width: 70% !important;
-    display: inline-block;
-  }
+<style scoped>
 
   .pagination {
     margin-top: 20px !important;

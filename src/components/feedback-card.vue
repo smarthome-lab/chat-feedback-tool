@@ -1,0 +1,106 @@
+<template>
+  <sui-card :key="feedback.id">
+    <sui-card-content>
+      <sui-card-meta>{{feedback.createdAt}}</sui-card-meta>
+      <sui-card-description>
+        <p>
+          {{feedback.text}}
+        </p>
+      </sui-card-description>
+    </sui-card-content>
+    <sui-card-content extra>
+      <div class="tags">
+        <sui-dropdown
+          multiple
+          fluid
+          :options="defaultTags"
+          placeholder="Tags"
+          search
+          selection
+          allowAdditions
+          v-model.lazy="feedback.tags"
+          v-on:change="patchTags"
+        />
+      </div>
+      <span slot="right">
+            <!--<sui-button negative compact icon="thumbs down outline" />-->
+            <sui-button-group>
+              <sui-button v-if="feedback.important || feedback.important===null"
+                          @click="patchFeedback(feedback.id, {important: true})" positive
+                          icon="thumbs up outline"/>
+              <sui-button v-if="!feedback.important && feedback.important!==null"
+                          @click="patchFeedback(feedback.id, {important: true})"
+                          icon="thumbs up outline"/>
+              <sui-button-or/>
+              <sui-button v-if="!feedback.important || feedback.important===null"
+                          @click="patchFeedback(feedback.id, {important: false})" negative
+                          icon="thumbs down outline"/>
+              <sui-button v-if="feedback.important && feedback.important!==null"
+                          @click="patchFeedback(feedback.id, {important: false})"
+                          icon="thumbs down outline"/>
+            </sui-button-group>
+          </span>
+    </sui-card-content>
+  </sui-card>
+</template>
+
+<script>
+  import {feathersClient} from '../feathers-client'
+
+  export default {
+    name: "feedback-card",
+    props: {
+      feedback: {
+        type: Object,
+        required: true
+      },
+      patchFeedback:{
+        type: Function,
+        required: true
+      }
+    },
+    data() {
+      return {
+        //feedback: this.feedback,
+        loading: false,
+        loadingImportant: false,
+        error: '',
+        currentTags: this.feedback.tags,
+        defaultTags: [
+          {key: 'chat', text: 'Chat', value: 'chat'},
+          {key: 'groupchat', text: 'Gruppenchat', value: 'groupchat'},
+          {key: 'solochat', text: 'Solochat', value: 'solochat'},
+          {key: 'profile', text: 'Profil', value: 'profil'},
+          {key: 'bug', text: 'bug', value: 'bug'},
+          {key: 'enhansmant', text: 'verbesserung', value: 'verbesserung'},
+        ],
+      }
+    },
+    methods: {
+      patchTags(){
+        console.log('update!')
+
+      }
+
+    },
+    watch: {
+      'feedback.tags': {
+        handler: function (val, oldVal) {
+          //Check if there is something to be updated
+          if(this.feedback.tags.toString()===oldVal.toString()){
+            return
+          }
+          //Update the tags
+          this.patchFeedback(this.feedback.id, {tags: this.feedback.tags})
+        }, deep: true
+      }
+    }
+  }
+</script>
+
+<style scoped>
+  .tags {
+    width: 70% !important;
+    display: inline-block;
+  }
+</style>
