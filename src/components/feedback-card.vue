@@ -19,7 +19,6 @@
           selection
           allowAdditions
           v-model.lazy="feedback.tags"
-          v-on:change="patchTags"
         />
       </div>
       <span slot="right">
@@ -77,11 +76,6 @@
       }
     },
     methods: {
-      patchTags(){
-        console.log('update!')
-
-      }
-
     },
     watch: {
       'feedback.tags': {
