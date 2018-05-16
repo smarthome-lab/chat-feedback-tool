@@ -176,6 +176,12 @@
           this.columns=parseInt(val)
         },
       },
+      'showInput':{
+        handler: function (val, oldVal) {
+          //Reload current feedbacks
+          this.loadFeedback()
+        }
+      },
       /*
       'resultsInput': {
         handler: function (val, oldVal) {
@@ -188,18 +194,7 @@
           //this.loadFeedback()
         },
       },
-      'showInput':{
-        handler: function (val, oldVal) {
-          //Reload current feedbacks
-          //this.loadFeedback()
-        }
-      },
-      'searchInput':{
-        handler: function (val, oldVal) {
-          console.log(val.split(', '))
-          this.loadFeedback()
-        }
-      }*/
+      */
     },
     beforeMount() {
       this.loadFeedback()
