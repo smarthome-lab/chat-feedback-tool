@@ -1,0 +1,18 @@
+language: node_js
+node_js:
+- '9'
+cache: yarn
+install: yarn install
+script: yarn build
+deploy:
+  provider: s3
+  access_key_id: F4DAUQXG3UYXXY5S5ZV6
+  secret_access_key:
+    secure: lXnycuZf6vuHR3fs+o4WKaAMiKPuyot1ZQvYpzbnIOnEc1bLsG+0w5/EKFTG8agBkAzpyYY5lFlABsC8++7rCjk7X9Ety6FlQoRd1FcyhGkrEYd7zQwRvYEknb9QCZ5Md12LuPPjwYC3OlErAn2eNdAvXiSjMQz3ovz7o0JKx9XgYTb1JxncSPPMJjzJBdcqN0FRTSmp0XJ5i4KpZschOyeMMEoA5j4WCqTPl+Eu6UmvYcwsiSVGYa4OUQ5qAcKSZabAVGmFfgP0XpAr3rKUJ6bxwuGiPMRYMCRfHNmt8A4ZhgZNp4U6WVFWwmCxbdP7ghBEd+YfqlzrMgYiVnpkLi55nlF8VDOqrzv2AP1XJFJATiqMcjjseuDqf/cpbDFdj/zgOSVex7MUtpMXUOz34I6eEXpSxH3Wf1EbjdYWQzRyAFo/X63If4VB3a9SMYz46rxAs4jQxbtl76f8wuTcLwS8SEOuyyM277BRMaTBcZ6MxRmjKvKT3EfwrwUP/ja+SA66JsazTR8y2YOV8e5TgsmER7exsrj6pj2L3PYj5J5YRXpHRlz55eAb0HMLWr6oHcRBB9elkNB3KM8lBYp6DDPv8qZw7WjU4HM2lW4khOTIhHuQDk8R1loZfNaPV0G2QzJPuB2MEPRIXSLd5Pgg4Xyf8S+EgB7r96wzJVeEo0I=
+  bucket: feedback
+  local-dir: dist
+  acl: public_read
+  endpoint: nyc3.digitaloceanspaces.com
+  skip_cleanup: true
+  on:
+    repo: smarthome-lab/chat-feedback-tool
