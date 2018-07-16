@@ -49,6 +49,7 @@
         <pagination class="pagination" v-bind:page=page v-bind:total="feedbacks.total" v-bind:resultsPerPage=results
                     :onClick=updatePage />
       </div>
+      <badge v-bind:number=newFeedback v-bind:onclick=clickBadge />
     </div>
   </div>
 </template>
@@ -77,6 +78,7 @@
         columns: 3,
         columnsInput: '',
         showInput: 4,
+        newFeedback:0,
         showOptions: [{
             text: 'Nur Positiv',
             value: 1,
@@ -100,6 +102,15 @@
       ...mapMutations([
         'setUser',
       ]),
+      initBadge(){
+        feathersClient.service('feedback').on('created', feedback => {
+          this.newFeedback=this.newFeedback+1;
+        });
+      },
+      clickBadge(){
+        this.loadFeedback();
+        this.newFeedback=0;
+      },
       updatePage(nu) {
         if (nu === 'first') {
           this.page = 1
@@ -198,6 +209,7 @@
     },
     beforeMount() {
       this.loadFeedback()
+      this.initBadge()
     },
   }
 

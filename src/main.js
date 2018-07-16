@@ -10,11 +10,13 @@ import 'es6-promise/auto'
 import { store } from './store/index';
 import Nav from './components/nav'
 import Pagination from './components/pagination'
+import Badge from './components/badge'
 
 Vue.config.productionTip = false
 Vue.use(SuiVue)
 Vue.component('nav-bar', Nav);
 Vue.component('pagination', Pagination);
+Vue.component('badge', Badge);
 
 
 

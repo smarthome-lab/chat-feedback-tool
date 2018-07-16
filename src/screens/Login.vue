@@ -56,15 +56,6 @@ export default {
     }
   },
   methods:{
-    log() {
-
-      feathersClient.service('feedback').create({
-        text: 'Message from client13379120392109023909190390193'
-      });
-      feathersClient.service('feedback').patch('a790afd0-b722-44a2-8665-bd09eec86409', {important: true}).then(()=>{
-        console.log('patched')
-      });
-    },
 
     login(){
       this.loading=true;
@@ -75,10 +66,16 @@ export default {
       }).then((response) => {
         feathersClient.passport.verifyJWT(response.accessToken).then((u)=> {
           feathersClient.service('users').get(u.userId).then((u) => {
-            console.log('eingeloggt!', u)
-            this.loading=false;
-            this.$router.push({ path: 'feedback' })
-            this.setUser(u)
+            if(u.role=='admin'){
+              console.log('eingeloggt!', u)
+              this.loading=false;
+              this.$router.push({ path: 'feedback' })
+              this.setUser(u)
+            }else{
+              this.loading=false;
+              this.error='Nur Admins dürfen sich hier einloggen sorry…'
+            }
+
           })
         })
       }).catch(e => {
