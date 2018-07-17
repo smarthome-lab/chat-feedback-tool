@@ -66,7 +66,7 @@ export default {
       }).then((response) => {
         feathersClient.passport.verifyJWT(response.accessToken).then((u)=> {
           feathersClient.service('users').get(u.userId).then((u) => {
-            if(u.role=='admin'){
+            if(u.role==='admin' || u.role==='moderator'){
               console.log('eingeloggt!', u)
               this.loading=false;
               this.$router.push({ path: 'feedback' })

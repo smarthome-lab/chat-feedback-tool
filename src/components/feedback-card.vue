@@ -72,6 +72,7 @@
           {key: 'profile', text: 'Profil', value: 'profil'},
           {key: 'bug', text: 'bug', value: 'bug'},
           {key: 'enhansmant', text: 'verbesserung', value: 'verbesserung'},
+          {key: 'lob', text: 'lob', value: 'lob'},
         ],
       }
     },
