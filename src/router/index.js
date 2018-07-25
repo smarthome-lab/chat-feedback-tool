@@ -66,15 +66,12 @@ async function checkAuth() {
         store.state.user = u
         return Promise.resolve(true)
       }).catch(async e => {
-        console.log('TRIPPLE NOPE!', e)
         return Promise.resolve(false)
       })
     }).catch(async e => {
-      console.log('DOUBLE NOPE!')
       return Promise.resolve(false)
     })
   }).catch(e => {
-    console.log('NOPE!')
     return Promise.resolve(false)
   })
 }

@@ -66,12 +66,12 @@
         error: '',
         currentTags: this.feedback.tags,
         defaultTags: [
-          {key: 'chat', text: 'Chat', value: 'chat'},
-          {key: 'groupchat', text: 'Gruppenchat', value: 'groupchat'},
-          {key: 'solochat', text: 'Solochat', value: 'solochat'},
-          {key: 'profile', text: 'Profil', value: 'profil'},
+          {key: 'Chat', text: 'Chat', value: 'chat'},
+          {key: 'Gruppenchat', text: 'Gruppenchat', value: 'groupchat'},
+          {key: 'Solochat', text: 'Solochat', value: 'solochat'},
+          {key: 'Profil', text: 'Profil', value: 'profil'},
           {key: 'bug', text: 'bug', value: 'bug'},
-          {key: 'enhansmant', text: 'verbesserung', value: 'verbesserung'},
+          {key: 'Verbesserung', text: 'Verbesserung', value: 'verbesserung'},
           {key: 'lob', text: 'lob', value: 'lob'},
         ],
       }
