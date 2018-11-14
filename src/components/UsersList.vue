@@ -17,6 +17,10 @@
       </div>
     </div>
 
+    <!-- Seitenauswahl -->
+    <pagination class="pagination" v-bind:page=currentPage v-bind:total="userCount" v-bind:resultsPerPage=pageSize
+                    :onClick=updatePage />
+
     <!-- Tabelle -->
     <div class="table-responsive">
       <table class="table table-striped table-bordered" style="width:100%">
@@ -46,7 +50,9 @@
           </tbody>
       </table>
     </div>
- <pagination class="pagination" v-bind:page=currentPage v-bind:total="userCount" v-bind:resultsPerPage=pageSize
+
+    <!-- Seitenauswahl -->
+    <pagination class="pagination" v-bind:page=currentPage v-bind:total="userCount" v-bind:resultsPerPage=pageSize
                     :onClick=updatePage />
   </div>
 </template>
