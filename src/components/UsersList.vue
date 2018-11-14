@@ -105,7 +105,7 @@ export default {
             $sort: {
               lastname: 1
             },
-            $select: [ 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
+            $select: [ 'id', 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
           }
         }).then((users) => {
           this.users = users.data;
@@ -145,7 +145,7 @@ export default {
             $sort: {
               lastname: 1
             },
-            $select: [ 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
+            $select: [ 'id', 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
             $or: [
               { prename: { $in: searchInput }},
               { lastname: { $in: searchInput }},
