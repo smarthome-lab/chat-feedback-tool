@@ -2,7 +2,7 @@
 <div id="userprofile">
   <nav-bar></nav-bar>
   <div class="content">
-  <h1>Benutzerübersicht für {{benutzername}}</h1>
+  <h1>Benutzerprofil für {{benutzername}}</h1>
   <table>
     <tr>
       <th>Vorname</th>
