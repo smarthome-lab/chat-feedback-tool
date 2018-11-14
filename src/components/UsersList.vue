@@ -1,14 +1,23 @@
 <template>
   <div class="col-md-12">
+
+    <!-- Ergebnisse pro Seite -->
     <div class="ui inline field">
-            <label>Ergebnisse pro Seite:</label>
-            <div class="ui mini input">
-              <input class="number" v-on:keyup="updateUsers" v-model="pageSize" :placeholder="results" type="number" min="1" step="1">
-            </div>
-          </div>
-    <div class="form-group">
-      <input type="text" class="form-control" v-on:keydown.enter="handleNewSearchInput" v-model="search" placeholder="Search">
+      <label>Ergebnisse pro Seite:</label>
+      <div class="ui mini input">
+        <input class="number" v-on:keyup="updateUsers" v-model="pageSize" :placeholder="results" type="number" min="1" step="1">
+      </div>
     </div>
+
+    <!-- Suche -->
+    <div class="ui inline field">
+      <label>Suche (Vorname, Nachname, Email oder Kennung):</label>
+      <div class="ui mini input">
+        <input type="text" class="form-control" v-on:keydown.enter="handleNewSearchInput" v-model="search" placeholder="Search">
+      </div>
+    </div>
+
+    <!-- Tabelle -->
     <div class="table-responsive">
       <table class="table table-striped table-bordered" style="width:100%">
           <thead width="400px">
@@ -48,13 +57,12 @@ import {feathersClient} from '../feathers-client'
 
 export default {
   data: () => ({
-    users: [],
-    userCount: 0,
+    users: [], // all currently available users
+    userCount: 0, // number of totally available users (more than users.length due to pagination!)
     currentSort:'lastname',
     currentSortDir:'asc',
     search: '',
-    searchSelection: '',
-    pageSize: 1,
+    pageSize: 10,
     currentPage: 1
   }),
   methods:{
@@ -135,28 +143,14 @@ export default {
             $or: [
               { prename: { $in: searchInput }},
               { lastname: { $in: searchInput }},
-              { email: { $in: searchInput }}
+              { email: { $in: searchInput }},
+              { hsid: { $in: searchInput }}
             ],
           }
         }).then((users) => {
           this.users = users.data;
           this.userCount = users.total;
         });
-    }
-  },
-  computed: {
-    filteredList: function() {
-      return this.users.filter((data) => {
-        let email = data.email.toLowerCase().match(this.search.toLowerCase());
-        let lastname = data.lastname.toLowerCase().match(this.search.toLowerCase());
-        let prename = data.prename.toLowerCase().match(this.search.toLowerCase());
-        let hsid = data.hsid.toLowerCase().match(this.search.toLowerCase());
-        return email || lastname || prename || hsid;
-      }).filter((row, index) => {
-        let start = (this.currentPage-1)*this.pageSize;
-        let end = this.currentPage*this.pageSize;
-        if(index >= start && index < end) return true;
-      });
     }
   },
   created () {
