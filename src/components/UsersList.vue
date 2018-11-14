@@ -23,7 +23,7 @@
         <img src="../assets/filter.png" alt="filter" id="filterIcon" width="25px" height="25px" />
 
         <div style="width: 140px;">
-          <label for="userStatusFilter">Status</label>
+          <label for="userStatusFilter">Acc. Status (PH)</label>
           <select v-model="filter.userStatus" @change="handleNewSearchInput" id="userStatusFilter">
           <option>Egal</option>
           <option>Aktiv</option>
@@ -80,7 +80,7 @@
                 <td><a :href="'/users/:' + user.id + ''">{{user.email}}</a></td>
                 <td>{{user.hsid}}</td>
                 <td>{{user.last_time_online}}</td>
-                <td>{{user.status}}</td>
+                <td><!-- TODO: Deaktiviert --></td>
                 <td>{{user.role}}</td>
               </tr>
           </tbody>
@@ -155,8 +155,7 @@ export default {
             "hsid",
             "last_time_online",
             "role",
-            "isVerified",
-            "status"
+            "isVerified"
           ]
         }
       };
@@ -212,8 +211,7 @@ export default {
             "hsid",
             "last_time_online",
             "role",
-            "isVerified",
-            "status"
+            "isVerified"
           ],
           $or: [
             { prename: { $in: searchInput } },
@@ -245,8 +243,7 @@ export default {
       }
       if (this.filter.userStatus !== "Egal") {
         Object.assign(searchObject.query, {
-          // TODO: status is placeholder
-          status: this.filter.userStatus
+          // TODO: Modify Query for "Deaktiviert"
         });
       }
     }
