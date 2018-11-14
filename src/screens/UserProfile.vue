@@ -1,5 +1,5 @@
 <template>
-<div id="useroverview">
+<div id="userprofile">
   <nav-bar></nav-bar>
   <div class="content">
   <h1>Benutzerübersicht für {{benutzername}}</h1>
@@ -23,7 +23,7 @@
       <th>Test</th>
       <th>Test</th>
       <th>Test</th>
-      <th>Test</th>
+      <th>{{kennung}}</th>
       <th>Test</th>
       <th>Test</th>
       <th>Test</th>
@@ -44,10 +44,11 @@ import {feathersClient} from '../feathers-client'
 import {mapGetters, mapMutations} from 'vuex'
 
 export default {
-  name: 'useroverview',
+  name: 'userprofile',
   data () {
     return {
-      benutzername: this.$route.params.id
+      benutzername: this.$route.params.id,
+      kennung: this.$route.params.id
     }
   }
 }
