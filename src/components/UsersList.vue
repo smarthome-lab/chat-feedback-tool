@@ -1,0 +1,125 @@
+<template>
+  <div class="col-md-12">
+    <div class="form-group">
+      <input type="text" class="form-control" v-model="search" placeholder="Search">
+    </div>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered" style="width:100%">
+          <thead width="400px">
+              <tr>
+                  <th scope="col">#</th>
+                  <th scope="col" @click="sort('lastname')">Name <i class="fas fa-sort-alpha-down float-right"></i></th>
+                  <th scope="col" @click="sort('prename')">Vorname <i class="fas fa-sort-alpha-down float-right"></i></th>
+                  <th scope="col" @click="sort('email')">Email<i class="fas fa-sort-alpha-down float-right"></i></th>
+                  <th scope="col" @click="sort('hsid')">Kennung<i class="fas fa-sort-alpha-down float-right"></i></th>
+                  <th scope="col">Zuletzt Online</th>
+                  <th scope="col">Deaktiviert</th>
+                  <th scope="col">Rolle </th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr v-for="(user, index) in (sortedActivity, filteredList)" :key="index">
+                <td>{{index + 1}}</td>
+                <td>{{user.lastname}}</td>
+                <td>{{user.prename}}</td>
+                <td>{{user.email}}</td>
+                <td>{{user.hsid}}</td>
+                <td>{{user.last_time_online}}</td>
+                <td></td>
+                <td>{{user.role}}</td>
+              </tr>
+          </tbody>
+      </table>
+    </div>
+ <button @click="prevPage" class="float-left btn btn-outline-info btn-sm"><i class="fas fa-arrow-left"></i> Previous</button>
+ <button @click="nextPage" class="float-right btn btn-outline-info btn-sm">Next <i class="fas fa-arrow-right"></i></button>
+  </div>
+</template>
+
+<script>
+
+import {feathersClient} from '../feathers-client'
+
+export default {
+  data: () => ({
+    users: [],
+    currentSort:'lastname',
+    currentSortDir:'asc',
+    search: '',
+    searchSelection: '',
+    pageSize: 10,
+    currentPage: 1
+  }),
+  methods:{
+    sort:function(s) {
+      if(s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+      }
+      this.currentSort = s;
+    },
+    nextPage:function() {
+      if((this.currentPage*this.pageSize) < this.users.length) this.currentPage++;
+    },
+    prevPage:function() {
+      if(this.currentPage > 1) this.currentPage--;
+    }
+  },
+  computed: {
+    sortedActivity:function() {
+      return this.users.sort((a,b) => {
+        let modifier = 1;
+        if(this.currentSortDir === 'desc') modifier = -1;
+        if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+        if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+        return 0;
+      }).filter((row, index) => {
+        let start = (this.currentPage-1)*this.pageSize;
+        let end = this.currentPage*this.pageSize;
+        if(index >= start && index < end) return true;
+      });
+    },
+    filteredList () {
+      return this.users.filter((data) => {
+        let email = data.email.toLowerCase().match(this.search.toLowerCase());
+        let lastname = data.lastname.toLowerCase().match(this.search.toLowerCase());
+        let prename = data.prename.toLowerCase().match(this.search.toLowerCase());
+        let hsid = data.hsid.toLowerCase().match(this.search.toLowerCase());
+        return email || lastname || prename || hsid;
+      }).filter((row, index) => {
+        let start = (this.currentPage-1)*this.pageSize;
+        let end = this.currentPage*this.pageSize;
+        if(index >= start && index < end) return true;
+      });
+    }
+  },
+  created () {
+    feathersClient.service('users').find({
+          query: {
+
+            /*
+            $skip: (this.page - 1) * this.results,
+            $limit: this.results,
+            $sort: {
+              createdAt: -1
+            },
+            $or: important,
+            tags: this.searchInput !== '' ? { $contains: this.searchInput.split(', ')}: undefined
+            */
+          }
+        }).then((users) => {
+          this.users = users.data;
+        });
+  },
+}
+</script>
+
+<style>
+th {
+  cursor:pointer;
+  /* width: 500px !important; */
+  white-space: nowrap;
+}
+tr {
+  white-space: nowrap;
+}
+</style>
