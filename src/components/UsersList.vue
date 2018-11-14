@@ -88,6 +88,9 @@ export default {
           query: {
             $skip: (this.currentPage - 1) * this.pageSize,
             $limit: this.pageSize,
+            $sort: {
+              lastname: 1
+            },
             $select: [ 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
           }
         }).then((users) => {
@@ -115,15 +118,24 @@ export default {
       }
     },
     searchUsers() {
+
+      var searchInput = [ this.search,
+                          this.search.toLowerCase(),
+                          this.search.toUpperCase(),
+                          this.search.charAt(0).toUpperCase() + this.search.slice(1) ];
+
       feathersClient.service('users').find({
           query: {
             $skip: (this.currentPage - 1) * this.pageSize,
             $limit: this.pageSize,
+            $sort: {
+              lastname: 1
+            },
             $select: [ 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
             $or: [
-              { prename: this.search },
-              { lastname: this.search },
-              { email: this.search }
+              { prename: { $in: searchInput }},
+              { lastname: { $in: searchInput }},
+              { email: { $in: searchInput }}
             ],
           }
         }).then((users) => {
