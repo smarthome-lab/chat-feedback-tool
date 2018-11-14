@@ -1,7 +1,13 @@
 <template>
   <div class="col-md-12">
+    <div class="ui inline field">
+            <label>Ergebnisse pro Seite:</label>
+            <div class="ui mini input">
+              <input class="number" v-on:keyup="updateUsers" v-model="pageSize" :placeholder="results" type="number" min="1" step="1">
+            </div>
+          </div>
     <div class="form-group">
-      <input type="text" class="form-control" v-model="search" placeholder="Search">
+      <input type="text" class="form-control" v-on:keydown.enter="handleNewSearchInput" v-model="search" placeholder="Search">
     </div>
     <div class="table-responsive">
       <table class="table table-striped table-bordered" style="width:100%">
@@ -18,7 +24,7 @@
               </tr>
           </thead>
           <tbody>
-              <tr v-for="(user, index) in (sortedActivity, filteredList)" :key="index">
+              <tr v-for="(user, index) in (users)" :key="index">
                 <td>{{index + 1}}</td>
                 <td>{{user.lastname}}</td>
                 <td>{{user.prename}}</td>
@@ -31,8 +37,8 @@
           </tbody>
       </table>
     </div>
- <button @click="prevPage" class="float-left btn btn-outline-info btn-sm"><i class="fas fa-arrow-left"></i> Previous</button>
- <button @click="nextPage" class="float-right btn btn-outline-info btn-sm">Next <i class="fas fa-arrow-right"></i></button>
+ <pagination class="pagination" v-bind:page=currentPage v-bind:total="userCount" v-bind:resultsPerPage=pageSize
+                    :onClick=updatePage />
   </div>
 </template>
 
@@ -43,11 +49,12 @@ import {feathersClient} from '../feathers-client'
 export default {
   data: () => ({
     users: [],
+    userCount: 0,
     currentSort:'lastname',
     currentSortDir:'asc',
     search: '',
     searchSelection: '',
-    pageSize: 10,
+    pageSize: 1,
     currentPage: 1
   }),
   methods:{
@@ -56,29 +63,77 @@ export default {
         this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
       }
       this.currentSort = s;
+
+      this.users = this.users.sort((a,b) => {
+                              let modifier = 1;
+                              if(this.currentSortDir === 'desc') modifier = -1;
+                              if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+                              if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+                              return 0;
+                            }).filter((row, index) => {
+                              let start = (this.currentPage-1)*this.pageSize;
+                              let end = this.currentPage*this.pageSize;
+                              if(index >= start && index < end) return true;
+                            });
     },
-    nextPage:function() {
-      if((this.currentPage*this.pageSize) < this.users.length) this.currentPage++;
+    updateUsers() {
+      if(this.search===''){
+        this.getUsers();
+      } else {
+        this.searchUsers();
+      }
     },
-    prevPage:function() {
-      if(this.currentPage > 1) this.currentPage--;
+    getUsers() {
+      feathersClient.service('users').find({
+          query: {
+            $skip: (this.currentPage - 1) * this.pageSize,
+            $limit: this.pageSize,
+            $select: [ 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
+          }
+        }).then((users) => {
+          this.users = users.data;
+          this.userCount = users.total;
+        });
+    },
+    updatePage(nu) {
+        if (nu === 'first') {
+          this.currentPage = 1;
+        } else if (nu === 'last') {
+          this.currentPage = Math.ceil(this.userCount / this.pageSize);
+        } else {
+          this.currentPage = this.currentPage + nu;
+        }
+        this.updateUsers();
+    },
+    handleNewSearchInput() {
+      this.currentPage = 1; // reset always when input changes
+
+      if(this.search===''){
+        this.updateUsers();
+      } else {
+        this.searchUsers();
+      }
+    },
+    searchUsers() {
+      feathersClient.service('users').find({
+          query: {
+            $skip: (this.currentPage - 1) * this.pageSize,
+            $limit: this.pageSize,
+            $select: [ 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
+            $or: [
+              { prename: this.search },
+              { lastname: this.search },
+              { email: this.search }
+            ],
+          }
+        }).then((users) => {
+          this.users = users.data;
+          this.userCount = users.total;
+        });
     }
   },
   computed: {
-    sortedActivity:function() {
-      return this.users.sort((a,b) => {
-        let modifier = 1;
-        if(this.currentSortDir === 'desc') modifier = -1;
-        if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
-        if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
-        return 0;
-      }).filter((row, index) => {
-        let start = (this.currentPage-1)*this.pageSize;
-        let end = this.currentPage*this.pageSize;
-        if(index >= start && index < end) return true;
-      });
-    },
-    filteredList () {
+    filteredList: function() {
       return this.users.filter((data) => {
         let email = data.email.toLowerCase().match(this.search.toLowerCase());
         let lastname = data.lastname.toLowerCase().match(this.search.toLowerCase());
@@ -93,23 +148,9 @@ export default {
     }
   },
   created () {
-    feathersClient.service('users').find({
-          query: {
+    this.updateUsers();
+  }
 
-            /*
-            $skip: (this.page - 1) * this.results,
-            $limit: this.results,
-            $sort: {
-              createdAt: -1
-            },
-            $or: important,
-            tags: this.searchInput !== '' ? { $contains: this.searchInput.split(', ')}: undefined
-            */
-          }
-        }).then((users) => {
-          this.users = users.data;
-        });
-  },
 }
 </script>
 
