@@ -17,6 +17,30 @@
       </div>
     </div>
 
+    <!-- Filter -->
+    <div class="ui inline field">
+      <div class="ui mini input">
+        <img src="../assets/filter.png" alt="filter" id="filterIcon" width="25px" height="25px" />
+
+        <select v-model="filter.userStatus" @change="handleNewSearchInput">
+          <option>Alle</option>
+          <option>Aktiv</option>
+          <option>Deaktiviert</option>
+          <option>Seit 1j deaktiviert</option>
+        </select>
+
+        <select v-model="filter.verified" @change="handleNewSearchInput">
+          <option>Verifiziert</option>
+          <option>Nicht Verifiziert</option>
+        </select>
+
+        <select v-model="filter.role" @change="handleNewSearchInput">
+          <option>Nutzer</option>
+          <option>Admin</option>
+        </select>
+      </div>
+    </div>
+
     <!-- Seitenauswahl -->
     <pagination class="pagination" v-bind:page=currentPage v-bind:total="userCount" v-bind:resultsPerPage=pageSize
                     :onClick=updatePage />
@@ -44,7 +68,7 @@
                 <td>{{user.email}}</td>
                 <td>{{user.hsid}}</td>
                 <td>{{user.last_time_online}}</td>
-                <td></td>
+                <td>{{user.status}}</td>
                 <td>{{user.role}}</td>
               </tr>
           </tbody>
@@ -69,7 +93,12 @@ export default {
     currentSortDir:'asc',
     search: '',
     pageSize: 10,
-    currentPage: 1
+    currentPage: 1,
+    filter: {
+      userStatus: 'Alle',
+      verified: 'Nicht Verifiziert',
+      role: 'Nutzer',
+    },
   }),
   methods:{
     sort:function(s) {
@@ -98,14 +127,18 @@ export default {
       }
     },
     getUsers() {
+      const { $qt } = [null, '', 'hi'];
       feathersClient.service('users').find({
           query: {
+            role: this.filter.role === 'Nutzer' ? null : this.filter.role === 'Admin' ? 'admin' : null,
+            isVerified: this.filter.verified === 'Verifiziert' ? true : false,
+            status: this.filter.userStatus === 'Alle' ? $qt : null,
             $skip: (this.currentPage - 1) * this.pageSize,
             $limit: this.pageSize,
             $sort: {
               lastname: 1
             },
-            $select: [ 'id', 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
+            $select: [ 'id', 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role', 'isVerified', 'status' ],
           }
         }).then((users) => {
           this.users = users.data;
@@ -138,14 +171,19 @@ export default {
                           this.search.toUpperCase(),
                           this.search.charAt(0).toUpperCase() + this.search.slice(1) ];
 
+      console.log(this.filter.role === 'Nutzer' ? '' : this.filter.role === 'Admin' ? 'admin' : '')
+      const { $qt } = [null, '', 'hi'];
       feathersClient.service('users').find({
           query: {
+            role: this.filter.role === 'Nutzer' ? null : this.filter.role === 'Admin' ? 'admin' : null,
+            isVerified: this.filter.verified === 'Verifiziert' ? true : false,
+            status: this.filter.userStatus === 'Alle' ? $qt : null,
             $skip: (this.currentPage - 1) * this.pageSize,
             $limit: this.pageSize,
             $sort: {
               lastname: 1
             },
-            $select: [ 'id', 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
+            $select: [ 'id', 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role', 'isVerified', 'status'  ],
             $or: [
               { prename: { $in: searchInput }},
               { lastname: { $in: searchInput }},
