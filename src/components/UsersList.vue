@@ -106,7 +106,7 @@ export default {
     pageSize: 10,
     currentPage: 1,
     filter: {
-      userStatus: "Egal",
+      userStatus: "Aktiv",
       verified: "Egal",
       role: "Egal"
     }
