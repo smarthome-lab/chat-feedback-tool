@@ -38,10 +38,10 @@
           </thead>
           <tbody>
               <tr v-for="(user, index) in (users)" :key="index">
-                <td><a :href="'/users/:' + user.id + ''">{{index + 1}}</a></td>
+                <td>{{index + 1}}</td>
                 <td>{{user.lastname}}</td>
                 <td>{{user.prename}}</td>
-                <td>{{user.email}}</td>
+                <td><a :href="'/users/:' + user.id + ''">{{user.email}}</a></td>
                 <td>{{user.hsid}}</td>
                 <td>{{user.last_time_online}}</td>
                 <td></td>
