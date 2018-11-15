@@ -17,6 +17,42 @@
       </div>
     </div>
 
+    <!-- Filter -->
+    <div class="ui inline field">
+      <div class="ui mini input">
+        <img src="../assets/filter.png" alt="filter" id="filterIcon" width="25px" height="25px" />
+
+        <div style="width: 140px;">
+          <label for="userStatusFilter">Acc. Status (PH)</label>
+          <select v-model="filter.userStatus" @change="handleNewSearchInput" id="userStatusFilter">
+          <option>Egal</option>
+          <option>Aktiv</option>
+          <option>Deaktiviert</option>
+          <option>Seit 1j deaktiviert</option>
+        </select>
+
+        </div>
+
+        <div style="width: 120px;">
+        <label for="verifiedFilter">Verifiziert</label>
+        <select v-model="filter.verified" @change="handleNewSearchInput" id="verifiedFilter">
+          <option>Egal</option>
+          <option>Verifiziert</option>
+          <option>Nicht Verifiziert</option>
+        </select>
+        </div>
+
+        <div style="width: 80px;">
+        <label for="roleFilter">Rolle</label>
+        <select v-model="filter.role" @change="handleNewSearchInput" id="roleFilter">
+          <option>Egal</option>
+          <option>Nutzer</option>
+          <option>Admin</option>
+        </select>
+        </div>
+      </div>
+    </div>
+
     <!-- Seitenauswahl -->
     <pagination class="pagination" v-bind:page=currentPage v-bind:total="userCount" v-bind:resultsPerPage=pageSize
                     :onClick=updatePage />
@@ -44,7 +80,7 @@
                 <td><a :href="'/users/:' + user.id + ''">{{user.email}}</a></td>
                 <td>{{user.hsid}}</td>
                 <td>{{user.last_time_online}}</td>
-                <td></td>
+                <td><!-- TODO: Deaktiviert --></td>
                 <td>{{user.role}}</td>
               </tr>
           </tbody>
@@ -58,117 +94,169 @@
 </template>
 
 <script>
-
-import {feathersClient} from '../feathers-client'
+import { feathersClient } from "../feathers-client";
 
 export default {
   data: () => ({
     users: [], // all currently available users
     userCount: 0, // number of totally available users (more than users.length due to pagination!)
-    currentSort:'lastname',
-    currentSortDir:'asc',
-    search: '',
+    currentSort: "lastname",
+    currentSortDir: "asc",
+    search: "",
     pageSize: 10,
-    currentPage: 1
+    currentPage: 1,
+    filter: {
+      userStatus: "Egal",
+      verified: "Egal",
+      role: "Egal"
+    }
   }),
-  methods:{
-    sort:function(s) {
-      if(s === this.currentSort) {
-        this.currentSortDir = this.currentSortDir==='asc'?'desc':'asc';
+  methods: {
+    sort: function(s) {
+      if (s === this.currentSort) {
+        this.currentSortDir = this.currentSortDir === "asc" ? "desc" : "asc";
       }
       this.currentSort = s;
 
-      this.users = this.users.sort((a,b) => {
-                              let modifier = 1;
-                              if(this.currentSortDir === 'desc') modifier = -1;
-                              if(a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
-                              if(a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
-                              return 0;
-                            }).filter((row, index) => {
-                              let start = (this.currentPage-1)*this.pageSize;
-                              let end = this.currentPage*this.pageSize;
-                              if(index >= start && index < end) return true;
-                            });
+      this.users = this.users
+        .sort((a, b) => {
+          let modifier = 1;
+          if (this.currentSortDir === "desc") modifier = -1;
+          if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
+          if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
+          return 0;
+        })
+        .filter((row, index) => {
+          let start = (this.currentPage - 1) * this.pageSize;
+          let end = this.currentPage * this.pageSize;
+          if (index >= start && index < end) return true;
+        });
     },
     updateUsers() {
-      if(this.search===''){
+      if (this.search === "") {
         this.getUsers();
       } else {
         this.searchUsers();
       }
     },
     getUsers() {
-      feathersClient.service('users').find({
-          query: {
-            $skip: (this.currentPage - 1) * this.pageSize,
-            $limit: this.pageSize,
-            $sort: {
-              lastname: 1
-            },
-            $select: [ 'id', 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
-          }
-        }).then((users) => {
+      const searchObject = {
+        query: {
+          $skip: (this.currentPage - 1) * this.pageSize,
+          $limit: this.pageSize,
+          $sort: {
+            lastname: 1
+          },
+          $select: [
+            "id",
+            "prename",
+            "lastname",
+            "email",
+            "hsid",
+            "last_time_online",
+            "role",
+            "isVerified"
+          ]
+        }
+      };
+      this.addFilters(searchObject);
+      console.log(searchObject);
+      feathersClient
+        .service("users")
+        .find(searchObject)
+        .then(users => {
           this.users = users.data;
           this.userCount = users.total;
         });
     },
     updatePage(nu) {
-        if (nu === 'first') {
-          this.currentPage = 1;
-        } else if (nu === 'last') {
-          this.currentPage = Math.ceil(this.userCount / this.pageSize);
-        } else {
-          this.currentPage = this.currentPage + nu;
-        }
-        this.updateUsers();
+      if (nu === "first") {
+        this.currentPage = 1;
+      } else if (nu === "last") {
+        this.currentPage = Math.ceil(this.userCount / this.pageSize);
+      } else {
+        this.currentPage = this.currentPage + nu;
+      }
+      this.updateUsers();
     },
     handleNewSearchInput() {
       this.currentPage = 1; // reset always when input changes
 
-      if(this.search===''){
+      if (this.search === "") {
         this.updateUsers();
       } else {
         this.searchUsers();
       }
     },
     searchUsers() {
+      var searchInput = [
+        this.search,
+        this.search.toLowerCase(),
+        this.search.toUpperCase(),
+        this.search.charAt(0).toUpperCase() + this.search.slice(1)
+      ];
 
-      var searchInput = [ this.search,
-                          this.search.toLowerCase(),
-                          this.search.toUpperCase(),
-                          this.search.charAt(0).toUpperCase() + this.search.slice(1) ];
-
-      feathersClient.service('users').find({
-          query: {
-            $skip: (this.currentPage - 1) * this.pageSize,
-            $limit: this.pageSize,
-            $sort: {
-              lastname: 1
-            },
-            $select: [ 'id', 'prename', 'lastname', 'email', 'hsid', 'last_time_online', 'role' ],
-            $or: [
-              { prename: { $in: searchInput }},
-              { lastname: { $in: searchInput }},
-              { email: { $in: searchInput }},
-              { hsid: { $in: searchInput }}
-            ],
-          }
-        }).then((users) => {
+      const searchObject = {
+        query: {
+          $skip: (this.currentPage - 1) * this.pageSize,
+          $limit: this.pageSize,
+          $sort: {
+            lastname: 1
+          },
+          $select: [
+            "id",
+            "prename",
+            "lastname",
+            "email",
+            "hsid",
+            "last_time_online",
+            "role",
+            "isVerified"
+          ],
+          $or: [
+            { prename: { $in: searchInput } },
+            { lastname: { $in: searchInput } },
+            { email: { $in: searchInput } },
+            { hsid: { $in: searchInput } }
+          ]
+        }
+      };
+      this.addFilters(searchObject);
+      feathersClient
+        .service("users")
+        .find(searchObject)
+        .then(users => {
           this.users = users.data;
           this.userCount = users.total;
         });
+    },
+    addFilters(searchObject) {
+      if (this.filter.role !== "Egal") {
+        Object.assign(searchObject.query, {
+          role: this.filter.role === "Nutzer" ? null : "admin"
+        });
+      }
+      if (this.filter.verified !== "Egal") {
+        Object.assign(searchObject.query, {
+          isVerified: this.filter.verified === "Verifiziert" ? true : false
+        });
+      }
+      if (this.filter.userStatus !== "Egal") {
+        Object.assign(searchObject.query, {
+          // TODO: Modify Query for "Deaktiviert"
+        });
+      }
     }
   },
-  created () {
+  created() {
     this.updateUsers();
   }
-
-}
+};
 </script>
 
 <style>
 th {
-  cursor:pointer;
+  cursor: pointer;
   /* width: 500px !important; */
   white-space: nowrap;
 }

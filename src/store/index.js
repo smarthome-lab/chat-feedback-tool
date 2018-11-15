@@ -9,12 +9,12 @@ export const store = new Vuex.Store({
     user: null
   },
   getters: {
-    getUser: state => state.user,
+    getUser: state => state.user
   },
   mutations: {
-    setUser(state, user) {
-      state.user=user;
-    },
+    setUser (state, user) {
+      state.user = user
+    }
   }
 
-});
+})
