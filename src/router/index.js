@@ -4,6 +4,7 @@ import HelloWorld from '@/screens/HelloWorld'
 import Login from '@/screens/Login'
 import PageNotFound from '@/screens/PageNotFound'
 import Feedback from '@/screens/Feedback'
+import UserOverview from '@/screens/UserOverview'
 import {feathersClient} from '../feathers-client'
 import {store} from '../store/index'
 
@@ -25,6 +26,12 @@ const router = new Router({
       path: '/feedback',
       name: 'Feedback',
       component: Feedback,
+      meta: {requiresAuth: true}
+    },
+    {
+      path: '/users',
+      name: 'Benutzeruebersicht',
+      component: UserOverview,
       meta: {requiresAuth: true}
     },
     {
