@@ -4,6 +4,7 @@ import HelloWorld from '@/screens/HelloWorld'
 import Login from '@/screens/Login'
 import PageNotFound from '@/screens/PageNotFound'
 import Feedback from '@/screens/Feedback'
+import UserOverview from '@/screens/UserOverview'
 import {feathersClient} from '../feathers-client'
 import {store} from '../store/index'
 
@@ -28,10 +29,16 @@ const router = new Router({
       meta: {requiresAuth: true}
     },
     {
+      path: '/users',
+      name: 'Benutzeruebersicht',
+      component: UserOverview,
+      meta: {requiresAuth: true}
+    },
+    {
       path: '*',
       name: '404',
       component: PageNotFound
-    },
+    }
   ]
 })
 
@@ -45,7 +52,7 @@ router.beforeEach(async (to, from, next) => {
     if (user === null || user === {} || user === undefined) {
       let c = await checkAuth()
       // if the user is still loged in show page else redirect to login
-      if(c) {
+      if (c) {
         next()
         return
       }
@@ -58,8 +65,7 @@ router.beforeEach(async (to, from, next) => {
   }
 })
 
-
-async function checkAuth() {
+async function checkAuth () {
   return await feathersClient.authenticate().then(async (response) => {
     return await feathersClient.passport.verifyJWT(response.accessToken).then(async (u) => {
       return await feathersClient.service('users').get(u.userId).then((u) => {
@@ -75,6 +81,5 @@ async function checkAuth() {
     return Promise.resolve(false)
   })
 }
-
 
 export default router
