@@ -77,7 +77,7 @@
                 <td>{{index + 1}}</td>
                 <td>{{user.lastname}}</td>
                 <td>{{user.prename}}</td>
-                <td><a :href="'/users/:' + user.id + ''">{{user.email}}</a></td>
+                <td><a :href="'/users/' + user.id + ''">{{user.email}}</a></td>
                 <td>{{user.hsid}}</td>
                 <td>{{user.last_time_online}}</td>
                 <td><!-- TODO: Deaktiviert --></td>
