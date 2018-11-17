@@ -31,7 +31,7 @@
         <td>{{displayedUser.lastname}}</td>
         <td>{{displayedUser.email}}</td>
         <td>{{displayedUser.hsid}}</td>
-        <td>{{displayedUser.status}}></td>
+        <td>{{displayedUser.status}}</td>
         <td>{{displayedUser.meter_to_hs}}</td>
         <td>{{displayedUser.role}}</td>
         <td>{{displayedUser.isVerified}}</td>
