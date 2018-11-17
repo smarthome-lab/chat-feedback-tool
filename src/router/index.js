@@ -1,13 +1,12 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/screens/HelloWorld'
 import UserProfile from '@/screens/UserProfile'
 import Login from '@/screens/Login'
 import PageNotFound from '@/screens/PageNotFound'
 import Feedback from '@/screens/Feedback'
 import UserOverview from '@/screens/UserOverview'
-import {feathersClient} from '../feathers-client'
-import {store} from '../store/index'
+import { feathersClient } from '../feathers-client'
+import { store } from '../store/index'
 
 Vue.use(Router)
 
@@ -27,19 +26,19 @@ const router = new Router({
       path: '/feedback',
       name: 'Feedback',
       component: Feedback,
-      meta: {requiresAuth: true}
+      meta: { requiresAuth: true }
     },
     {
       path: '/users/:id',
       name: 'UserProfile',
       component: UserProfile,
-      meta: {requiresAuth: true}
+      meta: { requiresAuth: true }
     },
     {
       path: '/users',
       name: 'Benutzeruebersicht',
       component: UserOverview,
-      meta: {requiresAuth: true}
+      meta: { requiresAuth: true }
     },
     {
       path: '*',
@@ -63,7 +62,7 @@ router.beforeEach(async (to, from, next) => {
         next()
         return
       }
-      next({path: '/login', query: {redirect: to.fullPath}})
+      next({ path: '/login', query: { redirect: to.fullPath } })
     } else {
       next()
     }
@@ -73,20 +72,17 @@ router.beforeEach(async (to, from, next) => {
 })
 
 async function checkAuth () {
-  return await feathersClient.authenticate().then(async (response) => {
-    return await feathersClient.passport.verifyJWT(response.accessToken).then(async (u) => {
-      return await feathersClient.service('users').get(u.userId).then((u) => {
-        store.state.user = u
-        return Promise.resolve(true)
-      }).catch(async e => {
-        return Promise.resolve(false)
-      })
-    }).catch(async e => {
-      return Promise.resolve(false)
-    })
-  }).catch(e => {
-    return Promise.resolve(false)
-  })
+  const authResponse = await feathersClient.authenticate()
+  if (!authResponse) {
+    return false
+  }
+  const passportUser = feathersClient.passport.verifyJWT(authResponse.accessToken)
+  if (!passportUser) {
+    return false
+  }
+  const storedUser = await feathersClient.service('users').get(passportUser.userId)
+  store.state.user = storedUser
+  return true
 }
 
 export default router

@@ -44,63 +44,63 @@
 </template>
 
 <script>
-  import moment from 'moment'
+import moment from 'moment'
 
-  export default {
-    name: "feedback-card",
-    props: {
-      feedback: {
-        type: Object,
-        required: true
+export default {
+  name: 'feedback-card',
+  props: {
+    feedback: {
+      type: Object,
+      required: true
+    },
+    patchFeedback: {
+      type: Function,
+      required: true
+    }
+  },
+  data () {
+    return {
+      // feedback: this.feedback,
+      loading: false,
+      loadingImportant: false,
+      error: '',
+      currentTags: this.feedback.tags,
+      defaultTags: [
+        { key: 'Chat', text: 'Chat', value: 'chat' },
+        { key: 'Gruppenchat', text: 'Gruppenchat', value: 'groupchat' },
+        { key: 'Solochat', text: 'Solochat', value: 'solochat' },
+        { key: 'Profil', text: 'Profil', value: 'profil' },
+        { key: 'bug', text: 'bug', value: 'bug' },
+        { key: 'Verbesserung', text: 'Verbesserung', value: 'verbesserung' },
+        { key: 'lob', text: 'lob', value: 'lob' }
+      ]
+    }
+  },
+  computed: {
+    time: function () {
+      return moment(this.feedback.createdAt).format('DD.MM.YYYY [um] hh:mm')
+    }
+  },
+  methods: {},
+  watch: {
+    'feedback.tags': {
+      handler: function (val, oldVal) {
+        // Check if there is something to be updated
+        if (this.feedback.tags.toString() === oldVal.toString()) {
+          return
+        }
+        // Update the tags
+        this.patchFeedback(this.feedback.id, { tags: this.feedback.tags })
       },
-      patchFeedback:{
-        type: Function,
-        required: true
-      }
-    },
-    data() {
-      return {
-        //feedback: this.feedback,
-        loading: false,
-        loadingImportant: false,
-        error: '',
-        currentTags: this.feedback.tags,
-        defaultTags: [
-          {key: 'Chat', text: 'Chat', value: 'chat'},
-          {key: 'Gruppenchat', text: 'Gruppenchat', value: 'groupchat'},
-          {key: 'Solochat', text: 'Solochat', value: 'solochat'},
-          {key: 'Profil', text: 'Profil', value: 'profil'},
-          {key: 'bug', text: 'bug', value: 'bug'},
-          {key: 'Verbesserung', text: 'Verbesserung', value: 'verbesserung'},
-          {key: 'lob', text: 'lob', value: 'lob'},
-        ],
-      }
-    },
-    computed: {
-      time: function () {
-        return moment(this.feedback.createdAt).format('DD.MM.YYYY [um] hh:mm')
-      }
-    },
-    methods: {
-    },
-    watch: {
-      'feedback.tags': {
-        handler: function (val, oldVal) {
-          //Check if there is something to be updated
-          if(this.feedback.tags.toString()===oldVal.toString()){
-            return
-          }
-          //Update the tags
-          this.patchFeedback(this.feedback.id, {tags: this.feedback.tags})
-        }, deep: true
-      }
+      deep: true
     }
   }
+}
 </script>
 
 <style scoped>
-  .tags {
-    width: 70% !important;
-    display: inline-block;
-  }
+.tags {
+  width: 70% !important;
+  display: inline-block;
+}
 </style>

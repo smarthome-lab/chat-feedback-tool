@@ -41,34 +41,32 @@
 </template>
 
 <script>
-
-  export default {
-    name: 'Pagination',
-    props: {
-      page: {
-        type: Number,
-        default: 1
-      },
-      total: {
-        type: Number
-      },
-      resultsPerPage: {
-        type: Number,
-        default: 10
-      },
-      onClick: {
-        type: Function,
-      }
+export default {
+  name: 'Pagination',
+  props: {
+    page: {
+      type: Number,
+      default: 1
     },
-    data() {
-      return {
-        loading: true
-      }
+    total: {
+      type: Number
     },
-    methods: {}
-  }
+    resultsPerPage: {
+      type: Number,
+      default: 10
+    },
+    onClick: {
+      type: Function
+    }
+  },
+  data () {
+    return {
+      loading: true
+    }
+  },
+  methods: {}
+}
 </script>
 
 <style>
-
 </style>

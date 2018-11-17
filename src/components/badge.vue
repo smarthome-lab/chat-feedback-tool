@@ -7,32 +7,31 @@
 </template>
 
 <script>
-
-  export default {
-    name: 'Badge',
-    props: {
-      number: {
-        type: Number,
-        default: 0
-      },
-      onclick: {
-        type: Function,
-      },
+export default {
+  name: 'Badge',
+  props: {
+    number: {
+      type: Number,
+      default: 0
     },
-    data() {
-      return {
-        loading: true
-      }
-    },
-    methods: {}
-  }
+    onclick: {
+      type: Function
+    }
+  },
+  data () {
+    return {
+      loading: true
+    }
+  },
+  methods: {}
+}
 </script>
 
 <style>
-  .badge{
-    position: fixed;
-    bottom: 20px;
-    right: 50px;
-    background-color: white;
-  }
+.badge {
+  position: fixed;
+  bottom: 20px;
+  right: 50px;
+  background-color: white;
+}
 </style>

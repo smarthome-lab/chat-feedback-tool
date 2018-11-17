@@ -52,35 +52,34 @@
 </template>
 
 <script>
-import { feathersClient } from "../feathers-client";
-import { mapGetters, mapMutations } from "vuex";
+import { feathersClient } from '../feathers-client'
 
 export default {
-  name: "userprofile",
+  name: 'userprofile',
 
-  data() {
+  data () {
     return {
       displayedUser: {}
-    };
+    }
   },
-  created() {
-    this.loadData();
+  created () {
+    this.loadData()
   },
   methods: {
-    loadData() {
+    loadData () {
       feathersClient
-        .service("users")
+        .service('users')
         .get(this.$route.params.id)
         .then(user => {
-          console.log(JSON.stringify(user));
-          this.displayedUser = user;
+          console.log(JSON.stringify(user))
+          this.displayedUser = user
         })
         .catch(error => {
-          console.log(error);
-        });
+          console.log(error)
+        })
     }
   }
-};
+}
 </script>
 
 <style>
