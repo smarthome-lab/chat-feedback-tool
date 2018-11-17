@@ -4,7 +4,7 @@
   <div class="content">
   <h1>Benutzerprofil für {{displayedUser.prename}}</h1>
 
-  <table class="ui celled table">
+  <table class="ui celled table" width="95%">
     <thead class="bottom aligned">
       <tr>
       <th>Vorname</th>
@@ -19,7 +19,11 @@
       <th>Rücksetzungs-Token</th>
       <th>Ablaufdatum der Verifizerung</th>
       <th>Zuletzt online</th>
-      <th>Ist online</th>
+      <th>Ist online?</th>
+      <th>Standort erlaubt?</th>
+      <th>Prüfzeit</th>
+      <th>Erstellt am</th>
+      <th>Update am</th>
     </tr></thead>
     <tbody>
       <tr>
@@ -27,15 +31,19 @@
         <td>{{displayedUser.lastname}}</td>
         <td>{{displayedUser.email}}</td>
         <td>{{displayedUser.hsid}}</td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
-        <td></td>
+        <td>{{displayedUser.status}}></td>
+        <td>{{displayedUser.meter_to_hs}}</td>
+        <td>{{displayedUser.role}}</td>
+        <td>{{displayedUser.isVerified}}</td>
+        <td>{{displayedUser.verifyToken}}</td>
+        <td>{{displayedUser.resetToken}}</td>
+        <td>{{displayedUser.verifyExpires}}</td>
+        <td>{{displayedUser.last_time_online}}</td>
+        <td>{{displayedUser.isOnline}}</td>
+        <td>{{displayedUser.location_is_allowed}}</td>
+        <td>{{displayedUser.location_check_time}}</td>
+        <td>{{displayedUser.createdAt}}</td>
+        <td>{{displayedUser.updatedAt}}</td>
       </tr>
     </tbody>
   </table>
@@ -44,50 +52,41 @@
 </template>
 
 <script>
-import {feathersClient} from '../feathers-client'
-import {mapGetters, mapMutations} from 'vuex'
+import { feathersClient } from "../feathers-client";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
-  name: 'userprofile',
-  
-  data () {
+  name: "userprofile",
+
+  data() {
     return {
-      displayedUser: {}, 
-
-    }
+      displayedUser: {}
+    };
   },
-  created(){
-      console.log('created');
-      this.loadData();
-    } , 
-  methods:{
-    loadData(){
-      console.log('LoadDAta');
-        feathersClient.passport.verifyJWT(response.accessToken).then((u)=> {
-          feathersClient.service('users').get(u.userId).then((user) => {
-            if(user.userId === this.$route.params.id){
-               console.log(JSON.stringify(user));
-                 this.displayedUser = user;
-            }else{
-              console.log('something wrong with request');
-            }
-
-          })
+  created() {
+    console.log("created");
+    this.loadData();
+  },
+  methods: {
+    loadData() {
+      console.log("LoadDAta");
+      feathersClient
+        .service("users")
+        .get(this.$route.params.id)
+        .then(user => {
+          console.log(JSON.stringify(user));
+          this.displayedUser = user;
         })
-
-    },
-
-    
-
-
-  } 
-}
-
-
+        .catch(error => {
+          console.log(error);
+        });
+    }
+  }
+};
 </script>
 
 <style>
-  table{
-    width:100%
-  }
+table {
+  width: 100%;
+}
 </style>
