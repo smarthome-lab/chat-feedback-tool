@@ -35,6 +35,7 @@ const router = new Router({
       component: UserProfile,
       meta: {requiresAuth: true}
     },
+    {
       path: '/users',
       name: 'Benutzeruebersicht',
       component: UserOverview,
