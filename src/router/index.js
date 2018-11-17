@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/screens/HelloWorld'
+import UserProfile from '@/screens/UserProfile'
 import Login from '@/screens/Login'
 import PageNotFound from '@/screens/PageNotFound'
 import Feedback from '@/screens/Feedback'
@@ -26,6 +27,12 @@ const router = new Router({
       path: '/feedback',
       name: 'Feedback',
       component: Feedback,
+      meta: {requiresAuth: true}
+    },
+    {
+      path: '/users/:id',
+      name: 'UserProfile',
+      component: UserProfile,
       meta: {requiresAuth: true}
     },
     {
