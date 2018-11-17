@@ -69,7 +69,6 @@ export default {
   },
   methods: {
     loadData() {
-      console.log("LoadDAta");
       feathersClient
         .service("users")
         .get(this.$route.params.id)
