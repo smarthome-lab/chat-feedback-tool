@@ -13,7 +13,7 @@
     <div class="ui inline field">
       <label>Suche (Vorname, Nachname, Email oder Kennung):</label>
       <div class="ui mini input">
-        <input type="text" class="form-control" v-on:keydown.enter="handleNewSearchInput" v-model="search" placeholder="Search">
+        <input type="text" class="form-control" v-model="search" v-on:keyup="handleNewSearchInput" placeholder="Search">
       </div>
     </div>
 
@@ -46,7 +46,7 @@
         <label for="roleFilter">Rolle</label>
         <select v-model="filter.role" @change="handleNewSearchInput" id="roleFilter">
           <option>Egal</option>
-          <option>Nutzer</option>
+          <option>Keine Rolle</option>
           <option>Admin</option>
         </select>
         </div>
@@ -62,7 +62,6 @@
       <table class="table table-striped table-bordered" style="width:100%">
           <thead width="400px">
               <tr>
-                  <th scope="col">#</th>
                   <th scope="col" @click="sort('lastname')">Name <i class="fas fa-sort-alpha-down float-right"></i></th>
                   <th scope="col" @click="sort('prename')">Vorname <i class="fas fa-sort-alpha-down float-right"></i></th>
                   <th scope="col" @click="sort('email')">Email<i class="fas fa-sort-alpha-down float-right"></i></th>
@@ -73,16 +72,15 @@
               </tr>
           </thead>
           <tbody>
-              <tr v-for="(user, index) in (users)" :key="index">
-                <td>{{index + 1}}</td>
-                <td>{{user.lastname}}</td>
-                <td>{{user.prename}}</td>
-                <td><a :href="'/?#/users/' + user.id + ''">{{user.email}}</a></td>
-                <td>{{user.hsid}}</td>
-                <td>{{user.last_time_online}}</td>
-                <td><!-- TODO: Deaktiviert --></td>
-                <td>{{user.role}}</td>
-              </tr>
+            <tr class="displayTable" v-for="(user, index) in (users)" :key="index" @click="linkTo(user.id)">
+              <td >{{user.lastname}}</td>
+              <td>{{user.prename}}</td>
+              <td><a :href="'/?#/users/' + user.id">{{user.email}}</a></td>
+              <td>{{user.hsid}}</td>
+              <td>{{user.last_time_online}}</td>
+              <td><!-- TODO: Deaktiviert --></td>
+              <td>{{user.role}}</td>
+            </tr>
           </tbody>
       </table>
     </div>
@@ -94,52 +92,46 @@
 </template>
 
 <script>
-import { feathersClient } from "../feathers-client";
+import { feathersClient } from '../feathers-client'
 
 export default {
   data: () => ({
     users: [], // all currently available users
     userCount: 0, // number of totally available users (more than users.length due to pagination!)
-    currentSort: "lastname",
-    currentSortDir: "asc",
-    search: "",
+    currentSort: 'lastname',
+    currentSortDir: 'asc',
+    search: '',
     pageSize: 10,
     currentPage: 1,
     filter: {
-      userStatus: "Aktiv",
-      verified: "Egal",
-      role: "Egal"
-    }
+      userStatus: 'Aktiv',
+      verified: 'Egal',
+      role: 'Egal'
+    },
+    results: undefined
   }),
   methods: {
-    sort: function(s) {
+    sort: function (s) {
       if (s === this.currentSort) {
-        this.currentSortDir = this.currentSortDir === "asc" ? "desc" : "asc";
+        this.currentSortDir = this.currentSortDir === 'asc' ? 'desc' : 'asc'
       }
-      this.currentSort = s;
+      this.currentSort = s
 
       this.users = this.users
         .sort((a, b) => {
-          let modifier = 1;
-          if (this.currentSortDir === "desc") modifier = -1;
-          if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
-          if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
-          return 0;
+          let modifier = 1
+          if (this.currentSortDir === 'desc') modifier = -1
+          if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier
+          if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier
+          return 0
         })
         .filter((row, index) => {
-          let start = (this.currentPage - 1) * this.pageSize;
-          let end = this.currentPage * this.pageSize;
-          if (index >= start && index < end) return true;
-        });
+          let start = (this.currentPage - 1) * this.pageSize
+          let end = this.currentPage * this.pageSize
+          if (index >= start && index < end) return true
+        })
     },
-    updateUsers() {
-      if (this.search === "") {
-        this.getUsers();
-      } else {
-        this.searchUsers();
-      }
-    },
-    getUsers() {
+    updateUsers () {
       const searchObject = {
         query: {
           $skip: (this.currentPage - 1) * this.pageSize,
@@ -148,110 +140,82 @@ export default {
             lastname: 1
           },
           $select: [
-            "id",
-            "prename",
-            "lastname",
-            "email",
-            "hsid",
-            "last_time_online",
-            "role",
-            "isVerified"
+            'id',
+            'prename',
+            'lastname',
+            'email',
+            'hsid',
+            'last_time_online',
+            'role',
+            'isVerified'
           ]
         }
-      };
-      this.addFilters(searchObject);
-      console.log(searchObject);
-      feathersClient
-        .service("users")
-        .find(searchObject)
-        .then(users => {
-          this.users = users.data;
-          this.userCount = users.total;
-        });
-    },
-    updatePage(nu) {
-      if (nu === "first") {
-        this.currentPage = 1;
-      } else if (nu === "last") {
-        this.currentPage = Math.ceil(this.userCount / this.pageSize);
-      } else {
-        this.currentPage = this.currentPage + nu;
       }
-      this.updateUsers();
-    },
-    handleNewSearchInput() {
-      this.currentPage = 1; // reset always when input changes
+      if (this.search !== '') {
+        const searchInput = [
+          this.search,
+          this.search.toLowerCase(),
+          this.search.toUpperCase(),
+          this.search.charAt(0).toUpperCase() + this.search.slice(1)
+        ]
 
-      if (this.search === "") {
-        this.updateUsers();
-      } else {
-        this.searchUsers();
-      }
-    },
-    searchUsers() {
-      var searchInput = [
-        this.search,
-        this.search.toLowerCase(),
-        this.search.toUpperCase(),
-        this.search.charAt(0).toUpperCase() + this.search.slice(1)
-      ];
-
-      const searchObject = {
-        query: {
-          $skip: (this.currentPage - 1) * this.pageSize,
-          $limit: this.pageSize,
-          $sort: {
-            lastname: 1
-          },
-          $select: [
-            "id",
-            "prename",
-            "lastname",
-            "email",
-            "hsid",
-            "last_time_online",
-            "role",
-            "isVerified"
-          ],
-          $or: [
+        Object.assign(searchObject.query,
+          { $or: [
             { prename: { $in: searchInput } },
             { lastname: { $in: searchInput } },
             { email: { $in: searchInput } },
             { hsid: { $in: searchInput } }
-          ]
-        }
-      };
-      this.addFilters(searchObject);
+          ] })
+      }
+      this.addFilters(searchObject)
+      console.log(searchObject)
       feathersClient
-        .service("users")
+        .service('users')
         .find(searchObject)
         .then(users => {
-          this.users = users.data;
-          this.userCount = users.total;
-        });
+          this.users = users.data
+          this.userCount = users.total
+        })
     },
-    addFilters(searchObject) {
-      if (this.filter.role !== "Egal") {
-        Object.assign(searchObject.query, {
-          role: this.filter.role === "Nutzer" ? null : "admin"
-        });
+    updatePage (nu) {
+      if (nu === 'first') {
+        this.currentPage = 1
+      } else if (nu === 'last') {
+        this.currentPage = Math.ceil(this.userCount / this.pageSize)
+      } else {
+        this.currentPage = this.currentPage + nu
       }
-      if (this.filter.verified !== "Egal") {
+      this.updateUsers()
+    },
+    handleNewSearchInput () {
+      this.currentPage = 1 // reset always when input changes
+      this.updateUsers()
+    },
+    addFilters (searchObject) {
+      if (this.filter.role !== 'Egal') {
         Object.assign(searchObject.query, {
-          isVerified: this.filter.verified === "Verifiziert" ? true : false
-        });
+          role: this.filter.role === 'Keine Rolle' ? null : 'admin'
+        })
       }
-      if (this.filter.userStatus !== "Egal") {
+      if (this.filter.verified !== 'Egal') {
+        Object.assign(searchObject.query, {
+          isVerified: this.filter.verified === 'Verifiziert'
+        })
+      }
+      if (this.filter.userStatus !== 'Egal') {
         Object.assign(searchObject.query, {
           // TODO: Modify Query for "Deaktiviert"
-        });
+        })
       }
+    },
+    linkTo (userId) {
+      this.$router.push({ path: `/users/${userId}` })
     }
   },
-  created() {
-    this.updateUsers();
+  created () {
+    this.updateUsers()
   }
-};
+}
 </script>
 
 <style>
@@ -262,5 +226,10 @@ th {
 }
 tr {
   white-space: nowrap;
+}
+
+.displayTable:hover {
+  background-color: rgb(243, 250, 243) !important;
+  cursor: pointer;
 }
 </style>

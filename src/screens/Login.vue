@@ -41,8 +41,7 @@
 </template>
 
 <script>
-
-import {feathersClient, auth} from '../feathers-client'
+import { feathersClient } from '../feathers-client'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
@@ -52,62 +51,61 @@ export default {
       loading: false,
       error: '',
       email: '',
-      password: '',
+      password: ''
     }
   },
-  methods:{
-
-    login(){
-      this.loading=true;
-      feathersClient.authenticate({
-        strategy: 'local',
-        email: this.email,
-        password: this.password
-      }).then((response) => {
-        feathersClient.passport.verifyJWT(response.accessToken).then((u)=> {
-          feathersClient.service('users').get(u.userId).then((u) => {
-            if(u.role==='admin' || u.role==='moderator'){
-              console.log('eingeloggt!', u)
-              this.loading=false;
-              this.$router.push({ path: 'feedback' })
-              this.setUser(u)
-            }else{
-              this.loading=false;
-              this.error='Nur Admins dürfen sich hier einloggen sorry…'
-            }
-
+  methods: {
+    login () {
+      this.loading = true
+      feathersClient
+        .authenticate({
+          strategy: 'local',
+          email: this.email,
+          password: this.password
+        })
+        .then(response => {
+          feathersClient.passport.verifyJWT(response.accessToken).then(u => {
+            feathersClient
+              .service('users')
+              .get(u.userId)
+              .then(u => {
+                if (u.role === 'admin' || u.role === 'moderator') {
+                  console.log('eingeloggt!', u)
+                  this.loading = false
+                  this.$router.push({ path: 'feedback' })
+                  this.setUser(u)
+                } else {
+                  this.loading = false
+                  this.error = 'Nur Admins dürfen sich hier einloggen sorry…'
+                }
+              })
           })
         })
-      }).catch(e => {
-        // Show login page (potentially with `e.message`)
-        this.loading=false;
-        this.error='Die Email-Adresse oder das Passwort sind falsch'
-        console.error('Authentication error', e);
-      });
-
+        .catch(e => {
+          // Show login page (potentially with `e.message`)
+          this.loading = false
+          this.error = 'Die Email-Adresse oder das Passwort sind falsch'
+          console.error('Authentication error', e)
+        })
     },
-    ...mapGetters([
-      'getUser'
-    ]),
-    ...mapMutations([
-      'setUser',
-    ])
+    ...mapGetters(['getUser']),
+    ...mapMutations(['setUser'])
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .background {
-    background-color: #fefefe !important;
-    height: 100vh;
-    margin: 1em 0;
-  }
-  .grid {
-    height: 100%;
-  }
-  .column {
-    max-width: 450px;
-    text-align: center !important;
-  }
+.background {
+  background-color: #fefefe !important;
+  height: 100vh;
+  margin: 1em 0;
+}
+.grid {
+  height: 100%;
+}
+.column {
+  max-width: 450px;
+  text-align: center !important;
+}
 </style>
