@@ -2,51 +2,83 @@
 <div id="userprofile">
   <nav-bar></nav-bar>
   <div class="content">
-  <h1>Benutzerprofil für {{displayedUser.prename}}</h1>
+  <h1>Benutzerprofil für {{displayedUser.prename}} {{displayedUser.lastname}}</h1>
 
-  <table class="ui celled table" width="95%">
-    <thead class="bottom aligned">
-      <tr>
+  <table class="ui violet table tablePart">
+    <tr>
       <th>Vorname</th>
-      <th>Name</th>
+      <td>{{displayedUser.prename}}</td>
+    </tr>
+     <tr>
+      <th>Nachname</th>
+      <td>{{displayedUser.lastname}}</td>
+    </tr>
+     <tr>
       <th>E-Mail</th>
+      <td>{{displayedUser.email}}</td>
+    </tr>
+     <tr>
       <th>Kennung</th>
+      <td>{{displayedUser.hsid}}</td>
+    </tr>
+     <tr>
       <th>Status</th>
-      <th>Entfernung zur HS(Meter)</th>
-      <th>Rolle</th>
-      <th>Verifiziert</th>
-      <th>Verifizierungs-Token</th>
-      <th>Rücksetzungs-Token</th>
-      <th>Ablaufdatum der Verifizerung</th>
-      <th>Zuletzt online</th>
-      <th>Ist online?</th>
-      <th>Standort erlaubt?</th>
-      <th>Prüfzeit</th>
-      <th>Erstellt am</th>
-      <th>Update am</th>
-    </tr></thead>
-    <tbody>
-      <tr>
-        <td>{{displayedUser.prename}}</td>
-        <td>{{displayedUser.lastname}}</td>
-        <td>{{displayedUser.email}}</td>
-        <td>{{displayedUser.hsid}}</td>
-        <td>{{displayedUser.status}}</td>
-        <td>{{displayedUser.meter_to_hs}}</td>
-        <td>{{displayedUser.role}}</td>
-        <td>{{displayedUser.isVerified}}</td>
-        <td>{{displayedUser.verifyToken}}</td>
-        <td>{{displayedUser.resetToken}}</td>
-        <td>{{displayedUser.verifyExpires}}</td>
-        <td>{{displayedUser.last_time_online}}</td>
-        <td>{{displayedUser.isOnline}}</td>
-        <td>{{displayedUser.location_is_allowed}}</td>
-        <td>{{displayedUser.location_check_time}}</td>
-        <td>{{displayedUser.createdAt}}</td>
-        <td>{{displayedUser.updatedAt}}</td>
-      </tr>
-    </tbody>
+      <td>{{displayedUser.status}}</td>
+    </tr>
   </table>
+  <table class="ui red table tablePart">
+    <tr>
+      <th>Entfernung zur HS in Meter</th>
+      <td>{{displayedUser.meter_to_hs}}</td>
+    </tr>
+     <tr>
+      <th>Rolle</th>
+      <td>{{displayedUser.role}}</td>
+    </tr>
+     <tr>
+      <th>Standort erlaubt?</th>
+      <td>{{displayedUser.location_is_allowed}}</td>
+    </tr>
+    <tr>
+      <th>Zuletzt Online</th>
+      <td>{{displayedUser.last_time_online}}</td>
+    </tr>
+    <tr>
+      <th>Ist Online?</th>
+      <td>{{displayedUser.isOnline}}</td>
+    </tr>
+    <tr>
+      <th>Erstellt am</th>
+      <td>{{displayedUser.createdAt}}</td>
+    </tr>
+    <tr>
+      <th>Update am</th>
+      <td>{{displayedUser.updatedAt}}</td>
+    </tr>
+  </table>
+  <table class="ui teal table tablePart">
+    <tr>
+      <th>Verifiziert</th>
+      <td>{{displayedUser.isVerified}}</td>
+    </tr>
+     <tr>
+      <th>Verifizierungs-Token</th>
+      <td>{{displayedUser.verifyToken}}</td>
+    </tr>
+     <tr>
+      <th>Rücksetzungs-Token</th>
+      <td>{{displayedUser.resetToken}}</td>
+    </tr>
+     <tr>
+      <th>Ablaufdatum der Verifizerung</th>
+      <td>{{displayedUser.verifyExpires}}</td>
+    </tr>
+     <tr>
+      <th>Letzter Standort Check</th>
+      <td>{{displayedUser.location_check_time}}</td>
+    </tr>
+  </table>
+
 </div>
 </div>
 </template>
@@ -85,5 +117,21 @@ export default {
 <style>
 table {
   width: 100%;
+}
+.tablePart {
+  width: 30%;
+  max-width: 30%;
+  margin-right: 10px !important;
+  margin-left: 10px !important;
+  float: left;
+  cursor: default;
+}
+
+.tablePart th {
+  text-align: right;
+  max-width: 50%;
+  width: 40%;
+  line-height: 50px;
+  cursor: default;
 }
 </style>
