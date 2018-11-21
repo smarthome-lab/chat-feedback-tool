@@ -26,8 +26,12 @@ export default {
   margin-right: 30px;
 }
 .number {
-  width: 40px !important;
+  width: 4000px !important;
   text-align: center !important;
+}
+
+.displayTable {
+  background-color: gray !important;
 }
 
 #app {

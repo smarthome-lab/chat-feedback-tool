@@ -12,12 +12,8 @@
     <nav>
       <a class="vertifally fitted item">
         <sui-button-group>
-          <sui-button>
-            <router-link to="/feedback">Feedback</router-link>
-          </sui-button>
-          <sui-button>
-            <router-link to="/users">Users</router-link>
-          </sui-button>
+            <router-link to="/feedback" tag="sui-button">Feedback</router-link>
+            <router-link to="/users" tag="sui-button">Users</router-link>
         </sui-button-group>
       </a>
     </nav>

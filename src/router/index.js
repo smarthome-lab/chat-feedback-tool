@@ -76,8 +76,8 @@ async function checkAuth () {
   if (!authResponse) {
     return false
   }
-  const passportUser = feathersClient.passport.verifyJWT(authResponse.accessToken)
-  if (!passportUser) {
+  const passportUser = await feathersClient.passport.verifyJWT(authResponse.accessToken)
+  if (!passportUser.userId) {
     return false
   }
   const storedUser = await feathersClient.service('users').get(passportUser.userId)
