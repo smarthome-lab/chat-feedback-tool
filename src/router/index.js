@@ -55,7 +55,7 @@ router.beforeEach(async (to, from, next) => {
     console.log('Wechsle Route', to, from, user)
     // this route requires auth, check if logged in
     // if not, redirect to login page.
-    if (user === null || user === {} || user === undefined) {
+    if (user === null || !user.id || user === undefined) {
       let c = await checkAuth()
       // if the user is still loged in show page else redirect to login
       if (c) {
@@ -72,7 +72,10 @@ router.beforeEach(async (to, from, next) => {
 })
 
 async function checkAuth () {
-  const authResponse = await feathersClient.authenticate()
+  const authResponse = await feathersClient.authenticate().catch(error => {
+    console.log(error)
+    return false
+  })
   if (!authResponse) {
     return false
   }
