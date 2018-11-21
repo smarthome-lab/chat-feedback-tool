@@ -3,27 +3,37 @@
   <nav-bar></nav-bar>
   <div class="content">
   <h1>Benutzerprofil für {{displayedUser.prename}} {{displayedUser.lastname}}</h1>
-
+  <div v-show="editSuccessful" class="ui positive message">
+    <i class="close icon" @click="closeNotification"></i>
+    <div class="header">
+      Nutzer erfolgreich aktualisiert!
+    </div>
+  </div>
   <table class="ui violet table tablePart">
     <tr>
       <th>Vorname</th>
-      <td>{{displayedUser.prename}}</td>
+      <td v-show="!this.editMode">{{displayedUser.prename}}</td>
+      <input v-model="displayedUser.prename" v-show="this.editMode" class="ui fluid input editField"/>
     </tr>
      <tr>
       <th>Nachname</th>
-      <td>{{displayedUser.lastname}}</td>
+      <td v-show="!this.editMode">{{displayedUser.lastname}}</td>
+      <input v-model="displayedUser.lastname" v-show="this.editMode" class="ui fluid input editField"/>
     </tr>
      <tr>
       <th>E-Mail</th>
-      <td>{{displayedUser.email}}</td>
+      <td v-show="!this.editMode">{{displayedUser.email}}</td>
+      <input v-model="displayedUser.email" v-show="this.editMode" class="ui fluid input editField"/>
     </tr>
      <tr>
       <th>Kennung</th>
-      <td>{{displayedUser.hsid}}</td>
+      <td v-show="!this.editMode">{{displayedUser.hsid}}</td>
+      <input v-model="displayedUser.hsid" v-show="this.editMode" class="ui fluid input editField"/>
     </tr>
      <tr>
       <th>Status</th>
-      <td>{{displayedUser.status}}</td>
+      <td v-show="!this.editMode">{{displayedUser.status}}</td>
+      <input v-model="displayedUser.status" v-show="this.editMode" class="ui fluid input editField"/>
     </tr>
   </table>
   <table class="ui red table tablePart">
@@ -58,6 +68,10 @@
   </table>
   <table class="ui teal table tablePart">
     <tr>
+      <th>User Id</th>
+      <td>{{displayedUser.id}}</td>
+    </tr>
+    <tr>
       <th>Verifiziert</th>
       <td>{{displayedUser.isVerified}}</td>
     </tr>
@@ -79,6 +93,9 @@
     </tr>
   </table>
 
+  <button class="ui black basic button editUserButton" @click="editUser" v-show="!this.editMode" >Benutzer editieren</button>
+  <button class="ui positive basic button editUserButton" @click="saveEdit" v-show="this.editMode" >Speichern</button>
+  <button class="ui negative basic button editUserButton" @click="abortEdit" v-show="this.editMode" >Abbrechen</button>
 </div>
 </div>
 </template>
@@ -91,7 +108,9 @@ export default {
 
   data () {
     return {
-      displayedUser: {}
+      displayedUser: {},
+      editMode: false,
+      editSuccessful: false
     }
   },
   created () {
@@ -107,8 +126,32 @@ export default {
           this.displayedUser = user
         })
         .catch(error => {
-          console.log(error)
+          console.error(error)
         })
+    },
+    editUser () {
+      this.editMode = true
+    },
+    saveEdit () {
+      console.log(`UPDATE FOR ÌD: ${this.displayedUser.id} OBJ: ${JSON.stringify(this.displayedUser)}`)
+      feathersClient
+        .service('users')
+        .patch(this.displayedUser.id, this.displayedUser)
+        .then(result => {
+          console.log(result)
+          this.loadData()
+          this.editMode = false
+        })
+        .catch(error => {
+          console.error(error)
+        })
+    },
+    abortEdit () {
+      this.editMode = false
+      this.$router.push({ path: `/users/${this.$route.params.id}` })
+    },
+    closeNotification () {
+      this.editSucessful = false
     }
   }
 }
@@ -118,11 +161,15 @@ export default {
 table {
   width: 100%;
 }
+
+.content {
+  margin-left: 10px !important;
+}
+
 .tablePart {
   width: 30%;
   max-width: 30%;
   margin-right: 10px !important;
-  margin-left: 10px !important;
   float: left;
   cursor: default;
 }
@@ -133,5 +180,19 @@ table {
   width: 40%;
   line-height: 50px;
   cursor: default;
+}
+
+.editUserButton {
+  width: 150px;
+  height: 50px;
+  clear: both;
+  float: none;
+  display: block !important;
+}
+
+.editField {
+  margin-top: 12px;
+  margin-left: 2px;
+  width: 95%;
 }
 </style>
