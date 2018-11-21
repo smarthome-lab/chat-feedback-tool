@@ -3,7 +3,7 @@
   <nav-bar></nav-bar>
   <div class="content">
   <h1>Benutzerprofil für {{displayedUser.prename}} {{displayedUser.lastname}}</h1>
-  <div v-show="editSuccessful" class="ui positive message">
+  <div v-if="this.editSuccessful" class="ui positive message">
     <i class="close icon" @click="closeNotification"></i>
     <div class="header">
       Nutzer erfolgreich aktualisiert!
@@ -93,9 +93,9 @@
     </tr>
   </table>
 
-  <button class="ui black basic button editUserButton" @click="editUser" v-show="!this.editMode" >Benutzer editieren</button>
-  <button class="ui positive basic button editUserButton" @click="saveEdit" v-show="this.editMode" >Speichern</button>
-  <button class="ui negative basic button editUserButton" @click="abortEdit" v-show="this.editMode" >Abbrechen</button>
+  <button class="ui black basic button editUserButton" @click="editUser" v-if="!this.editMode" >Benutzer editieren</button>
+  <button class="ui positive basic button editUserButton" @click="saveEdit" v-if="this.editMode" >Speichern</button>
+  <button class="ui negative basic button editUserButton" @click="abortEdit" v-if="this.editMode" >Abbrechen</button>
 </div>
 </div>
 </template>
@@ -141,6 +141,7 @@ export default {
           console.log(result)
           this.loadData()
           this.editMode = false
+          this.editSucessful = true
         })
         .catch(error => {
           console.error(error)
@@ -188,6 +189,7 @@ table {
   clear: both;
   float: none;
   display: block !important;
+  margin-bottom: 15px !important;
 }
 
 .editField {
