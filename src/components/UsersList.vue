@@ -75,7 +75,7 @@
             <tr class="displayTable" v-for="(user, index) in (users)" :key="index" @click="linkTo(user.id)">
               <td >{{user.lastname}}</td>
               <td>{{user.prename}}</td>
-              <td><a :href="'/?#/users/' + user.id">{{user.email}}</a></td>
+              <td>{{user.email}}</td>
               <td>{{user.hsid}}</td>
               <td>{{user.last_time_online}}</td>
               <td><!-- TODO: Deaktiviert --></td>
