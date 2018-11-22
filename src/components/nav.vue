@@ -1,13 +1,10 @@
 <template>
   <div id="head">
     <sui-menu secondary pointing>
-      <a class="vertically fitted item" href ="#">
-        <img class="ui small image" src="../assets/Logo_HS.png"/>
-      </a>
 
-      <a class="vertically fitted item" href="#">
-        <img class="ui mini image" src="../assets/logo.png"/>
-      </a>
+    <a class="vertically fitted item" href="#">
+      <img class="ui mini image" src="../assets/logo.png"/>
+    </a>
 
     <nav>
       <a class="vertifally fitted item">
