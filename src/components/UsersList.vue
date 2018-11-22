@@ -77,7 +77,7 @@
               <td>{{user.prename}}</td>
               <td>{{user.email}}</td>
               <td>{{user.hsid}}</td>
-              <td>{{user.last_time_online}}</td>
+              <td>{{formatTime(user.last_time_online)}}</td>
               <td><!-- TODO: Deaktiviert --></td>
               <td>{{user.role}}</td>
             </tr>
@@ -93,6 +93,7 @@
 
 <script>
 import { feathersClient } from '../feathers-client'
+import moment from 'moment'
 
 export default {
   data: () => ({
@@ -210,7 +211,8 @@ export default {
     },
     linkTo (userId) {
       this.$router.push({ path: `/users/${userId}` })
-    }
+    },
+    formatTime: (timeStamp) => moment(timeStamp).format('DD.MM.YYYY hh:mm:ss')
   },
   created () {
     this.updateUsers()

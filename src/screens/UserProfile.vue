@@ -9,31 +9,56 @@
       Nutzer erfolgreich aktualisiert!
     </div>
   </div>
+  <div v-if="this.editAborted" class="ui info message">
+    <i class="close icon" @click="closeNotification"></i>
+    <div class="header">
+      Bearbeitung wurde abgebrochen. Keine Daten wurden verändert!
+    </div>
+  </div>
+  <div v-if="this.resetPasswordDone" class="ui info message">
+    <i class="close icon" @click="closeNotification"></i>
+    <div class="header">
+      Passwort von {{displayedUser.prename}} {{displayedUser.lastname}} wurde zurückgesetzt!
+    </div>
+  </div>
   <table class="ui violet table tablePart">
     <tr>
       <th>Vorname</th>
       <td v-show="!this.editMode">{{displayedUser.prename}}</td>
-      <input v-model="displayedUser.prename" v-show="this.editMode" class="ui fluid input editField"/>
+      <td><input v-model="displayedUser.prename" v-show="this.editMode" class="ui fluid input editField"/></td>
     </tr>
      <tr>
       <th>Nachname</th>
       <td v-show="!this.editMode">{{displayedUser.lastname}}</td>
-      <input v-model="displayedUser.lastname" v-show="this.editMode" class="ui fluid input editField"/>
+      <td><input v-model="displayedUser.lastname" v-show="this.editMode" class="ui fluid input"/></td>
     </tr>
      <tr>
       <th>E-Mail</th>
       <td v-show="!this.editMode">{{displayedUser.email}}</td>
-      <input v-model="displayedUser.email" v-show="this.editMode" class="ui fluid input editField"/>
+      <td><input v-model="displayedUser.email" v-show="this.editMode" class="ui fluid input"/></td>
     </tr>
      <tr>
       <th>Kennung</th>
       <td v-show="!this.editMode">{{displayedUser.hsid}}</td>
-      <input v-model="displayedUser.hsid" v-show="this.editMode" class="ui fluid input editField"/>
+      <td><input v-model="displayedUser.hsid" v-show="this.editMode" class="ui fluid input"/></td>
     </tr>
      <tr>
       <th>Status</th>
       <td v-show="!this.editMode">{{displayedUser.status}}</td>
-      <input v-model="displayedUser.status" v-show="this.editMode" class="ui fluid input editField"/>
+      <td><input v-model="displayedUser.status" v-show="this.editMode" class="ui fluid input"/></td>
+    </tr>
+     <tr>
+      <th>Deaktiviert</th>
+      <td>
+        <div class="ui toggle checkbox">
+          <input type="checkbox" name="public">
+          <label>(An = Nutzer Deaktiviert)</label>
+        </div>
+      </td>
+    </tr>
+    <tr v-if="this.editMode">
+      <th>Passwort</th>
+      <td><button class="ui red inverted button" @click="resetPasswordOfUser">Zurücksetzen</button></td>
     </tr>
   </table>
   <table class="ui red table tablePart">
@@ -59,11 +84,11 @@
     </tr>
     <tr>
       <th>Erstellt am</th>
-      <td>{{displayedUser.createdAt}}</td>
+      <td>{{formatTime(displayedUser.createdAt)}}</td>
     </tr>
     <tr>
       <th>Update am</th>
-      <td>{{displayedUser.updatedAt}}</td>
+      <td>{{formatTime(displayedUser.updatedAt)}}</td>
     </tr>
   </table>
   <table class="ui teal table tablePart">
@@ -93,15 +118,16 @@
     </tr>
   </table>
 
-  <button class="ui black basic button editUserButton" @click="editUser" v-if="!this.editMode" >Benutzer editieren</button>
-  <button class="ui positive basic button editUserButton" @click="saveEdit" v-if="this.editMode" >Speichern</button>
-  <button class="ui negative basic button editUserButton" @click="abortEdit" v-if="this.editMode" >Abbrechen</button>
+  <button class="ui primary inverted button editUserButton" @click="editUser" v-if="!this.editMode" >Benutzer editieren</button>
+  <button class="ui positive inverted button editUserButton" @click="saveEdit" v-if="this.editMode" >Speichern</button>
+  <button class="ui negative inverted button editUserButton" @click="abortEdit" v-if="this.editMode" >Abbrechen</button>
 </div>
 </div>
 </template>
 
 <script>
 import { feathersClient } from '../feathers-client'
+import moment from 'moment'
 
 export default {
   name: 'userprofile',
@@ -110,7 +136,9 @@ export default {
     return {
       displayedUser: {},
       editMode: false,
-      editSuccessful: false
+      editSuccessful: false,
+      editAborted: false,
+      resetPasswordDone: false
     }
   },
   created () {
@@ -131,6 +159,8 @@ export default {
     },
     editUser () {
       this.editMode = true
+      this.editSuccessful = false
+      this.editAborted = false
     },
     saveEdit () {
       console.log(`UPDATE FOR ÌD: ${this.displayedUser.id} OBJ: ${JSON.stringify(this.displayedUser)}`)
@@ -141,7 +171,7 @@ export default {
           console.log(result)
           this.loadData()
           this.editMode = false
-          this.editSucessful = true
+          this.editSuccessful = true
         })
         .catch(error => {
           console.error(error)
@@ -149,11 +179,20 @@ export default {
     },
     abortEdit () {
       this.editMode = false
-      this.$router.push({ path: `/users/${this.$route.params.id}` })
+      this.loadData()
+      this.editSuccessful = false
+      this.editAborted = true
     },
     closeNotification () {
-      this.editSucessful = false
-    }
+      this.editSuccessful = false
+      this.editAborted = false
+      this.resetPasswordDone = false
+    },
+    resetPasswordOfUser () {
+      this.resetPasswordDone = true
+      // TODO: reset Password
+    },
+    formatTime: (timeStamp) => moment(timeStamp).format('DD.MM.YYYY hh:mm:ss')
   }
 }
 </script>
@@ -190,11 +229,5 @@ table {
   float: none;
   display: block !important;
   margin-bottom: 15px !important;
-}
-
-.editField {
-  margin-top: 12px;
-  margin-left: 2px;
-  width: 95%;
 }
 </style>
