@@ -84,11 +84,11 @@
     </tr>
     <tr>
       <th>Erstellt am</th>
-      <td>{{displayedUser.createdAt}}</td>
+      <td>{{formatTime(displayedUser.createdAt)}}</td>
     </tr>
     <tr>
       <th>Update am</th>
-      <td>{{displayedUser.updatedAt}}</td>
+      <td>{{formatTime(displayedUser.updatedAt)}}</td>
     </tr>
   </table>
   <table class="ui teal table tablePart">
@@ -127,6 +127,7 @@
 
 <script>
 import { feathersClient } from '../feathers-client'
+import moment from 'moment'
 
 export default {
   name: 'userprofile',
@@ -190,7 +191,8 @@ export default {
     resetPasswordOfUser () {
       this.resetPasswordDone = true
       // TODO: reset Password
-    }
+    },
+    formatTime: (timeStamp) => moment(timeStamp).format('DD.MM.YYYY hh:mm:ss')
   }
 }
 </script>
