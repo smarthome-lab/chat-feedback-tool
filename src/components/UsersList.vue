@@ -23,7 +23,7 @@
         <img src="../assets/filter.png" alt="filter" id="filterIcon" width="25px" height="25px" />
 
         <div style="width: 140px;">
-          <label for="userStatusFilter">Acc. Status (PH)</label>
+          <label for="userStatusFilter">Acc. Status</label>
           <select v-model="filter.userStatus" @change="handleNewSearchInput" id="userStatusFilter">
           <option>Egal</option>
           <option>Aktiv</option>
@@ -77,8 +77,8 @@
               <td>{{user.prename}}</td>
               <td>{{user.email}}</td>
               <td>{{user.hsid}}</td>
-              <td>{{formatTime(user.last_time_online)}}</td>
-              <td><!-- TODO: Deaktiviert --></td>
+              <td>{{user.last_time_online ? formatTime(user.last_time_online) : undefined}}</td>
+              <td>{{!user.is_activated}}</td>
               <td>{{user.role}}</td>
             </tr>
           </tbody>
@@ -148,24 +148,18 @@ export default {
             'hsid',
             'last_time_online',
             'role',
-            'isVerified'
+            'isVerified',
+            'is_activated'
           ]
         }
       }
       if (this.search !== '') {
-        const searchInput = [
-          this.search,
-          this.search.toLowerCase(),
-          this.search.toUpperCase(),
-          this.search.charAt(0).toUpperCase() + this.search.slice(1)
-        ]
-
         Object.assign(searchObject.query,
           { $or: [
-            { prename: { $in: searchInput } },
-            { lastname: { $in: searchInput } },
-            { email: { $in: searchInput } },
-            { hsid: { $in: searchInput } }
+            { prename: { $iLike: `%${this.search}%` } },
+            { lastname: { $iLike: `%${this.search}%` } },
+            { email: { $iLike: `%${this.search}%` } },
+            { hsid: { $iLike: `%${this.search}%` } }
           ] })
       }
       this.addFilters(searchObject)
@@ -176,6 +170,8 @@ export default {
         .then(users => {
           this.users = users.data
           this.userCount = users.total
+        }).catch(error => {
+          console.error(JSON.stringify(error))
         })
     },
     updatePage (nu) {
@@ -204,9 +200,18 @@ export default {
         })
       }
       if (this.filter.userStatus !== 'Egal') {
-        Object.assign(searchObject.query, {
-          // TODO: Modify Query for "Deaktiviert"
-        })
+        if (this.filter.userStatus === 'Aktiv' || this.filter.userStatus === 'Deaktiviert') {
+          Object.assign(searchObject.query, {
+            is_activated: this.filter.userStatus === 'Aktiv'
+          })
+        } else if (this.filter.userStatus === 'Seit 1j deaktiviert') {
+          Object.assign(searchObject.query, {
+            is_activated: false,
+            updatedAt: {
+              $lt: moment(new Date().getTime() - 31536000000).format('YYYY-MM-DD[T]HH:mm') // One Year
+            }
+          })
+        }
       }
     },
     linkTo (userId) {
