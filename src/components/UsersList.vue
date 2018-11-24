@@ -154,19 +154,12 @@ export default {
         }
       }
       if (this.search !== '') {
-        const searchInput = [
-          this.search,
-          this.search.toLowerCase(),
-          this.search.toUpperCase(),
-          this.search.charAt(0).toUpperCase() + this.search.slice(1)
-        ]
-
         Object.assign(searchObject.query,
           { $or: [
-            { prename: { $in: searchInput } },
-            { lastname: { $in: searchInput } },
-            { email: { $in: searchInput } },
-            { hsid: { $in: searchInput } }
+            { prename: { $iLike: `%${this.search}%` } },
+            { lastname: { $iLike: `%${this.search}%` } },
+            { email: { $iLike: `%${this.search}%` } },
+            { hsid: { $iLike: `%${this.search}%` } }
           ] })
       }
       this.addFilters(searchObject)
