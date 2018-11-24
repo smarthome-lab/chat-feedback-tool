@@ -48,11 +48,11 @@
       <td><input v-model="displayedUser.status" v-show="this.editMode" class="ui fluid input"/></td>
     </tr>
      <tr>
-      <th>Deaktiviert</th>
+      <th>Nutzer Aktiviert</th>
       <td>
         <div class="ui toggle checkbox">
-          <input type="checkbox" name="public">
-          <label>(An = Nutzer Deaktiviert)</label>
+          <input type="checkbox" v-model="displayedUser.is_activated" @change="changeDeactivated" name="public">
+          <label>(Aus = Nutzer Deaktiviert)</label>
         </div>
       </td>
     </tr>
@@ -76,7 +76,7 @@
     </tr>
     <tr>
       <th>Zuletzt Online</th>
-      <td>{{displayedUser.last_time_online}}</td>
+      <td>{{displayedUser.last_time_online ? formatTime(displayedUser.last_time_online) : undefined}}</td>
     </tr>
     <tr>
       <th>Ist Online?</th>
@@ -150,11 +150,10 @@ export default {
         .service('users')
         .get(this.$route.params.id)
         .then(user => {
-          console.log(JSON.stringify(user))
           this.displayedUser = user
         })
         .catch(error => {
-          console.error(error)
+          console.error(JSON.stringify(error))
         })
     },
     editUser () {
@@ -163,18 +162,16 @@ export default {
       this.editAborted = false
     },
     saveEdit () {
-      console.log(`UPDATE FOR ÌD: ${this.displayedUser.id} OBJ: ${JSON.stringify(this.displayedUser)}`)
       feathersClient
         .service('users')
         .patch(this.displayedUser.id, this.displayedUser)
         .then(result => {
-          console.log(result)
           this.loadData()
           this.editMode = false
           this.editSuccessful = true
         })
         .catch(error => {
-          console.error(error)
+          console.error(JSON.stringify(error))
         })
     },
     abortEdit () {
@@ -192,7 +189,20 @@ export default {
       this.resetPasswordDone = true
       // TODO: reset Password
     },
-    formatTime: (timeStamp) => moment(timeStamp).format('DD.MM.YYYY hh:mm:ss')
+    formatTime: (timeStamp) => moment(timeStamp).format('DD.MM.YYYY hh:mm:ss'),
+    changeDeactivated () {
+      feathersClient
+        .service('users')
+        .patch(this.displayedUser.id, { is_activated: this.displayedUser.is_activated })
+        .then(result => {
+          this.loadData()
+          this.editMode = false
+          this.editSuccessful = true
+        })
+        .catch(error => {
+          console.error(JSON.stringify(error))
+        })
+    }
   }
 }
 </script>
