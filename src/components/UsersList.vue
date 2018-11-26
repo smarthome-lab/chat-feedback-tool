@@ -1,18 +1,21 @@
 <template>
-  <div class="col-md-12">
-
+  <div class="col-md-12" style="padding: 20px;">
+    <div style="text-align: left;">
     <!-- Ergebnisse pro Seite -->
     <div class="ui inline field">
       <label>Ergebnisse pro Seite:</label>
-      <div class="ui mini input">
+      <div class="ui input">
         <input class="number" v-on:keyup="updateUsers" v-model="pageSize" :placeholder="results" type="number" min="1" step="1">
       </div>
     </div>
 
+    <div style="height: 10px;"></div>
+
     <!-- Suche -->
     <div class="ui inline field">
       <label>Suche (Vorname, Nachname, Email oder Kennung):</label>
-      <div class="ui mini input">
+      <div class="ui icon input">
+        <i class="search icon"></i>
         <input type="text" class="form-control" v-model="search" v-on:keyup="handleNewSearchInput" placeholder="Search">
       </div>
     </div>
@@ -22,29 +25,28 @@
       <div class="ui mini input">
         <img src="../assets/filter.png" alt="filter" id="filterIcon" width="25px" height="25px" />
 
-        <div style="width: 140px;">
-          <label for="userStatusFilter">Acc. Status</label>
-          <select v-model="filter.userStatus" @change="handleNewSearchInput" id="userStatusFilter">
+        <div style="width: 130px;">
+          <label for="userStatusFilter">Account Status</label>
+          <select v-model="filter.userStatus" @change="handleNewSearchInput" class="ui floating dropdown" id="userStatusFilter">
           <option>Egal</option>
           <option>Aktiv</option>
           <option>Deaktiviert</option>
           <option>Seit 1j deaktiviert</option>
         </select>
 
-        </div>
-
+      </div>
         <div style="width: 120px;">
         <label for="verifiedFilter">Verifiziert</label>
-        <select v-model="filter.verified" @change="handleNewSearchInput" id="verifiedFilter">
+        <select v-model="filter.verified" @change="handleNewSearchInput" class="ui floating dropdown" id="verifiedFilter">
           <option>Egal</option>
           <option>Verifiziert</option>
           <option>Nicht Verifiziert</option>
         </select>
-        </div>
+      </div>
 
         <div style="width: 80px;">
         <label for="roleFilter">Rolle</label>
-        <select v-model="filter.role" @change="handleNewSearchInput" id="roleFilter">
+        <select v-model="filter.role" @change="handleNewSearchInput" class="ui floating dropdown" id="roleFilter">
           <option>Egal</option>
           <option>Keine Rolle</option>
           <option>Admin</option>
@@ -52,14 +54,19 @@
         </div>
       </div>
     </div>
+    </div>
+
+    <div class="ui divider"></div>
 
     <!-- Seitenauswahl -->
     <pagination class="pagination" v-bind:page=currentPage v-bind:total="userCount" v-bind:resultsPerPage=pageSize
                     :onClick=updatePage />
 
+   <div class="ui divider"></div>
+
     <!-- Tabelle -->
     <div class="table-responsive">
-      <table class="table table-striped table-bordered" style="width:100%">
+      <table class="table ui table-striped table-bordered" style="width:100%">
           <thead width="400px">
               <tr>
                   <th scope="col" @click="sort('lastname')">Name <i class="fas fa-sort-alpha-down float-right"></i></th>
@@ -84,6 +91,8 @@
           </tbody>
       </table>
     </div>
+
+    <div class="ui divider"></div>
 
     <!-- Seitenauswahl -->
     <pagination class="pagination" v-bind:page=currentPage v-bind:total="userCount" v-bind:resultsPerPage=pageSize
