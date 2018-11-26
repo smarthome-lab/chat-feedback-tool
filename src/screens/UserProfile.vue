@@ -21,31 +21,35 @@
       Passwort von {{displayedUser.prename}} {{displayedUser.lastname}} wurde zurückgesetzt!
     </div>
   </div>
-  <table class="ui violet table tablePart">
+  <div id="editUserButtonContainer">
+    <button class="ui primary inverted button editUserButton" @click="editUser" v-if="!this.editMode" >Benutzer editieren</button>
+    <button class="ui positive inverted button editUserButton" @click="saveEdit" v-if="this.editMode" >Speichern</button>
+    <button class="ui negative basic button editUserButton" @click="abortEdit" v-if="this.editMode" >Abbrechen</button>
+  </div>
+  <table class="ui red table tablePart">
     <tr>
       <th>Vorname</th>
       <td v-show="!this.editMode">{{displayedUser.prename}}</td>
-      <td><input v-model="displayedUser.prename" v-show="this.editMode" class="ui fluid input editField"/></td>
+      <td><input v-model="displayedUser.prename" v-show="this.editMode" class="ui fluid input editField editField"/></td>
     </tr>
      <tr>
       <th>Nachname</th>
       <td v-show="!this.editMode">{{displayedUser.lastname}}</td>
-      <td><input v-model="displayedUser.lastname" v-show="this.editMode" class="ui fluid input"/></td>
+      <td><input v-model="displayedUser.lastname" v-show="this.editMode" class="ui fluid input editField"/></td>
     </tr>
      <tr>
       <th>E-Mail</th>
       <td v-show="!this.editMode">{{displayedUser.email}}</td>
-      <td><input v-model="displayedUser.email" v-show="this.editMode" class="ui fluid input"/></td>
+      <td><input v-model="displayedUser.email" v-show="this.editMode" class="ui fluid input editField"/></td>
     </tr>
      <tr>
       <th>Kennung</th>
       <td v-show="!this.editMode">{{displayedUser.hsid}}</td>
-      <td><input v-model="displayedUser.hsid" v-show="this.editMode" class="ui fluid input"/></td>
+      <td><input v-model="displayedUser.hsid" v-show="this.editMode" class="ui fluid input editField"/></td>
     </tr>
      <tr>
       <th>Status</th>
-      <td v-show="!this.editMode">{{displayedUser.status}}</td>
-      <td><input v-model="displayedUser.status" v-show="this.editMode" class="ui fluid input"/></td>
+      <td>{{displayedUser.status}}</td>
     </tr>
      <tr>
       <th>Nutzer Aktiviert</th>
@@ -61,7 +65,7 @@
       <td><button class="ui red inverted button" @click="resetPasswordOfUser">Zurücksetzen</button></td>
     </tr>
   </table>
-  <table class="ui red table tablePart">
+  <table class="ui black table tablePart">
     <tr>
       <th>Entfernung zur HS in Meter</th>
       <td>{{displayedUser.meter_to_hs}}</td>
@@ -91,7 +95,7 @@
       <td>{{formatTime(displayedUser.updatedAt)}}</td>
     </tr>
   </table>
-  <table class="ui teal table tablePart">
+  <table class="ui grey table tablePart">
     <tr>
       <th>User Id</th>
       <td>{{displayedUser.id}}</td>
@@ -117,10 +121,6 @@
       <td>{{displayedUser.location_check_time}}</td>
     </tr>
   </table>
-
-  <button class="ui primary inverted button editUserButton" @click="editUser" v-if="!this.editMode" >Benutzer editieren</button>
-  <button class="ui positive inverted button editUserButton" @click="saveEdit" v-if="this.editMode" >Speichern</button>
-  <button class="ui negative inverted button editUserButton" @click="abortEdit" v-if="this.editMode" >Abbrechen</button>
 </div>
 </div>
 </template>
@@ -217,8 +217,8 @@ table {
 }
 
 .tablePart {
-  width: 30%;
-  max-width: 30%;
+  width: 32%;
+  max-width: 32%;
   margin-right: 10px !important;
   float: left;
   cursor: default;
@@ -235,9 +235,21 @@ table {
 .editUserButton {
   width: 150px;
   height: 50px;
-  clear: both;
-  float: none;
-  display: block !important;
+  display: inline-block !important;
   margin-bottom: 15px !important;
 }
+
+#editUserButtonContainer {
+  width: 97%;
+  max-width: 97%;
+  text-align: right;
+  display: block !important;
+  margin-right: 30px;
+}
+
+.editField {
+  max-width: 95%;
+  width: 95%;
+}
+
 </style>
