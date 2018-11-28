@@ -53,6 +53,7 @@
         </select>
         </div>
       </div>
+      <button class="ui positive inverted button createUserButton" @click="createUser" >Benutzer erstellen</button>
     </div>
     </div>
 
@@ -226,7 +227,10 @@ export default {
     linkTo (userId) {
       this.$router.push({ path: `/users/${userId}` })
     },
-    formatTime: (timeStamp) => moment(timeStamp).format('DD.MM.YYYY hh:mm:ss')
+    formatTime: (timeStamp) => moment(timeStamp).format('DD.MM.YYYY hh:mm:ss'),
+    createUser () {
+      this.$router.push({ path: `/createUser` })
+    }
   },
   created () {
     this.updateUsers()
@@ -247,5 +251,11 @@ tr {
 .displayTable:hover {
   background-color: rgb(243, 250, 243) !important;
   cursor: pointer;
+}
+
+.createUserButton {
+  float: right;
+  max-height: 50px;
+  height: 50px;
 }
 </style>
