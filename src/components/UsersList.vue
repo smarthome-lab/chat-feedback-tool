@@ -158,7 +158,8 @@ export default {
             'last_time_online',
             'role',
             'isVerified',
-            'is_activated'
+            'is_activated',
+            'deactivated_since'
           ]
         }
       }
@@ -216,7 +217,7 @@ export default {
         } else if (this.filter.userStatus === 'Seit 1j deaktiviert') {
           Object.assign(searchObject.query, {
             is_activated: false,
-            updatedAt: {
+            deactivated_since: {
               $lt: moment(new Date().getTime() - 31536000000).format('YYYY-MM-DD[T]HH:mm') // One Year
             }
           })
