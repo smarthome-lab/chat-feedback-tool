@@ -4,8 +4,9 @@
   <div class="content">
   <h1>Benutzererstellung</h1>
   <div id="editUserButtonContainer">
-    <button class="ui positive inverted button editUserButton" @click="saveEdit" >Speichern</button>
-    <button class="ui negative basic button editUserButton" @click="abortEdit" >Abbrechen</button>
+    <div v-if="this.patchPressed" class="ui active inline loader"></div>
+    <button  v-if="!this.patchPressed" class="ui positive inverted button editUserButton" @click="saveEdit" >Speichern</button>
+    <button v-if="!this.patchPressed" class="ui negative basic button editUserButton" @click="abortEdit" >Abbrechen</button>
   </div>
   <div v-if="this.showErrorString" class='ui error message'>
     <div class='content'>
@@ -84,7 +85,8 @@ export default {
       errorPrename: false,
       errorLastname: false,
       errorEmail: false,
-      errorHSID: false
+      errorHSID: false,
+      patchPressed: false
     }
   },
   created () {
@@ -92,6 +94,7 @@ export default {
   },
   methods: {
     saveEdit () {
+      this.patchPressed = true
       this.createUser.password = Math.random().toString(36).slice(-8)
       this.createUser.temporary_password = this.createUser.password
       this.errorStringArray = []
@@ -128,6 +131,7 @@ export default {
           this.errorHSID = true
         }
         this.showErrorString = true
+        this.patchPressed = false
         return
       }
       this.createUser.email = this.createUser.email.toLowerCase()
@@ -137,9 +141,11 @@ export default {
         .create(this.createUser)
         .then(result => {
           // Sprung zum Profil basierend auf ID
+          this.patchPressed = false
           this.$router.push({ path: `/users/${result.id}` })
         })
         .catch(error => {
+          this.patchPressed = false
           this.showErrorString = true
           const errorMessage = JSON.stringify(error)
           let isKnownError = false
@@ -174,10 +180,11 @@ table {
 }
 
 .tablePart {
-  width: 32%;
-  max-width: 32%;
-  margin-right: 10px !important;
-  float: left;
+  width: 50%;
+  max-width: 50%;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  clear: both;
   cursor: default;
 }
 
