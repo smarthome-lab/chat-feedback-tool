@@ -76,7 +76,8 @@ export default {
         lastname: '',
         email: '',
         hsid: '',
-        password: ''
+        password: '',
+        temporary_password: ''
       },
       errorStringArray: [],
       showErrorString: false,
@@ -92,13 +93,14 @@ export default {
   methods: {
     saveEdit () {
       this.createUser.password = Math.random().toString(36).slice(-8)
+      this.createUser.temporary_password = this.createUser.password
+      this.errorStringArray = []
+      this.showErrorString = false
+      this.errorPrename = false
+      this.errorLastname = false
+      this.errorEmail = false
+      this.errorHSID = false
       if (!this.createUser.prename || !this.createUser.lastname || !this.createUser.email || !this.createUser.hsid) {
-        this.errorStringArray = []
-        this.showErrorString = false
-        this.errorPrename = false
-        this.errorLastname = false
-        this.errorEmail = false
-        this.errorHSID = false
         if (!this.createUser.prename) {
           this.errorStringArray.push('Bitte Vornamen eintragen')
           this.errorPrename = true
@@ -135,11 +137,23 @@ export default {
         .create(this.createUser)
         .then(result => {
           // Sprung zum Profil basierend auf ID
-          console.log(result)
           this.$router.push({ path: `/users/${result.id}` })
         })
         .catch(error => {
-          console.error(JSON.stringify(error))
+          this.showErrorString = true
+          const errorMessage = JSON.stringify(error)
+          let isKnownError = false
+          if (errorMessage.indexOf('email must be unique') !== -1) {
+            this.errorStringArray.push('Die angegebene E-Mail existiert bereits')
+            isKnownError = true
+          }
+          if (errorMessage.indexOf('hsid must be unique') !== -1) {
+            this.errorStringArray.push('Die angegebene Kennung existiert bereits')
+            isKnownError = true
+          }
+          if (isKnownError === false) {
+            this.errorStringArray.push('Es ist ein unerwarteter Fehler aufgetreten')
+          }
         })
     },
     abortEdit () {
