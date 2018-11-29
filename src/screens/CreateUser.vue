@@ -97,43 +97,12 @@ export default {
       this.patchPressed = true
       this.createUser.password = Math.random().toString(36).slice(-8)
       this.createUser.temporary_password = this.createUser.password
-      this.errorStringArray = []
-      this.showErrorString = false
-      this.errorPrename = false
-      this.errorLastname = false
-      this.errorEmail = false
-      this.errorHSID = false
-      if (!this.createUser.prename || !this.createUser.lastname || !this.createUser.email || !this.createUser.hsid) {
-        if (!this.createUser.prename) {
-          this.errorStringArray.push('Bitte Vornamen eintragen')
-          this.errorPrename = true
-        }
-        if (!this.createUser.lastname) {
-          this.errorStringArray.push('Bitte Nachnamen eintragen')
-          this.errorLastname = true
-        }
-        if (!this.createUser.email) {
-          this.errorStringArray.push('Bitte E-Mail eintragen')
-          this.errorEmail = true
-        }
-        if (!this.createUser.hsid) {
-          this.errorStringArray.push('Bitte Hochschul-Kennung eintragen')
-          this.errorHSID = true
-        }
-        if (this.createUser.email.indexOf('hs-coburg.de') === -1) {
-          this.errorStringArray.push('Bitte E-Mail überprüfen')
-          this.errorEmail = true
-        }
-        const rege = this.createUser.hsid.match(/[a-z0-9A-Z]{8}/)
-        console.log(rege)
-        if (rege === null || rege[0] !== this.createUser.hsid) {
-          this.errorStringArray.push('Bitte Kennung überprüfen')
-          this.errorHSID = true
-        }
-        this.showErrorString = true
+
+      if (!this.errorCheck()) {
         this.patchPressed = false
         return
       }
+
       this.createUser.email = this.createUser.email.toLowerCase()
       this.createUser.hsid = this.createUser.hsid.toLowerCase()
       feathersClient
@@ -161,6 +130,47 @@ export default {
             this.errorStringArray.push('Es ist ein unerwarteter Fehler aufgetreten')
           }
         })
+    },
+    errorCheck () {
+      this.errorStringArray = []
+      this.showErrorString = false
+      this.errorPrename = false
+      this.errorLastname = false
+      this.errorEmail = false
+      this.errorHSID = false
+      if (!this.createUser.prename || !this.createUser.lastname || !this.createUser.email || !this.createUser.hsid) {
+        if (!this.createUser.prename) {
+          this.errorStringArray.push('Bitte Vornamen eintragen')
+          this.errorPrename = true
+        }
+        if (!this.createUser.lastname) {
+          this.errorStringArray.push('Bitte Nachnamen eintragen')
+          this.errorLastname = true
+        }
+        if (!this.createUser.email) {
+          this.errorStringArray.push('Bitte E-Mail eintragen')
+          this.errorEmail = true
+        }
+        if (!this.createUser.hsid) {
+          this.errorStringArray.push('Bitte Hochschul-Kennung eintragen')
+          this.errorHSID = true
+        }
+      }
+      if (this.createUser.email.indexOf('hs-coburg.de') === -1) {
+        this.errorStringArray.push('Bitte E-Mail überprüfen')
+        this.errorEmail = true
+      }
+      const rege = this.createUser.hsid.match(/[a-z0-9A-Z]{8}/)
+      if (rege === null || rege[0] !== this.createUser.hsid) {
+        this.errorStringArray.push('Bitte Kennung überprüfen')
+        this.errorHSID = true
+      }
+
+      if (this.errorPrename || this.errorLastname || this.errorEmail || this.errorHSID) {
+        this.showErrorString = true
+        return false
+      }
+      return true
     },
     abortEdit () {
       // User kommt auf Homepage zurück
