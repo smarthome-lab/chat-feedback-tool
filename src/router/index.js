@@ -7,6 +7,7 @@ import Feedback from '@/screens/Feedback'
 import UserOverview from '@/screens/UserOverview'
 import { feathersClient } from '../feathers-client'
 import { store } from '../store/index'
+import CreateUser from '@/screens/CreateUser'
 
 Vue.use(Router)
 
@@ -38,6 +39,12 @@ const router = new Router({
       path: '/users',
       name: 'Benutzeruebersicht',
       component: UserOverview,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/createUser',
+      name: 'Benutzererstellung',
+      component: CreateUser,
       meta: { requiresAuth: true }
     },
     {
