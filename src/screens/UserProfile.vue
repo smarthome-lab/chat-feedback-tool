@@ -169,6 +169,7 @@ export default {
         .get(this.$route.params.id)
         .then(user => {
           this.displayedUser = user
+          this.errorCheck()
         })
         .catch(error => {
           console.error(JSON.stringify(error))
