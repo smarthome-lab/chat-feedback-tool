@@ -239,7 +239,7 @@ export default {
           this.errorHSID = true
         }
       }
-      if (this.displayedUser.email.indexOf('hs-coburg.de') === -1) {
+      if (this.displayedUser.email.indexOf('hs-coburg.de') === -1 && this.displayedUser.email.indexOf('hschat.app') === -1) {
         this.errorStringArray.push('Bitte E-Mail überprüfen')
         this.errorEmail = true
       }
