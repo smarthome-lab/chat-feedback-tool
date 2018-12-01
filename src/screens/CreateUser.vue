@@ -8,7 +8,7 @@
     <button  v-if="!this.patchPressed" class="ui positive inverted button createUserButton" @click="saveEdit" >Speichern</button>
     <button v-if="!this.patchPressed" class="ui negative basic button createUserButton" @click="abortEdit" >Abbrechen</button>
   </div>
-  <div v-if="this.showErrorString" class='ui error message'>
+  <div v-if="this.showErrorString" class='ui error message' style="max-width: 60%;">
     <div class='content'>
       <div class='header'>Es sind einige Fehler aufgetreten</div>
       <ul class='list'>
@@ -173,6 +173,13 @@ export default {
       return true
     },
     abortEdit () {
+      this.errorStringArray = []
+      this.showErrorString = false
+      this.errorPrename = false
+      this.errorLastname = false
+      this.errorEmail = false
+      this.errorHSID = false
+      this.patchPressed = false
       // User kommt auf Homepage zurück
       this.$router.push({ path: `/users` })
     }
