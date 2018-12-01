@@ -3,10 +3,10 @@
   <nav-bar></nav-bar>
   <div class="content">
   <h1>Benutzererstellung</h1>
-  <div id="editUserButtonContainer">
+  <div id="createUserButtonContainer">
     <div v-if="this.patchPressed" class="ui active inline loader"></div>
-    <button  v-if="!this.patchPressed" class="ui positive inverted button editUserButton" @click="saveEdit" >Speichern</button>
-    <button v-if="!this.patchPressed" class="ui negative basic button editUserButton" @click="abortEdit" >Abbrechen</button>
+    <button  v-if="!this.patchPressed" class="ui positive inverted button createUserButton" @click="saveEdit" >Speichern</button>
+    <button v-if="!this.patchPressed" class="ui negative basic button createUserButton" @click="abortEdit" >Abbrechen</button>
   </div>
   <div v-if="this.showErrorString" class='ui error message'>
     <div class='content'>
@@ -18,7 +18,7 @@
       </ul>
     </div>
   </div>
-  <table class="ui red table tablePart">
+  <table class="ui red table userCreateTablePart">
     <tr>
       <th>Vorname</th>
       <td><input v-model="createUser.prename" v-bind:class="{
@@ -189,7 +189,7 @@ table {
   margin-left: 10px !important;
 }
 
-.tablePart {
+.userCreateTablePart {
   width: 50%;
   max-width: 50%;
   margin-left: auto !important;
@@ -198,7 +198,7 @@ table {
   cursor: default;
 }
 
-.tablePart th {
+.userCreateTablePart th {
   text-align: right;
   max-width: 50%;
   width: 40%;
@@ -206,14 +206,14 @@ table {
   cursor: default;
 }
 
-.editUserButton {
+.createUserButton {
   width: 150px;
   height: 50px;
   display: inline-block !important;
   margin-bottom: 15px !important;
 }
 
-#editUserButtonContainer {
+#createUserButtonContainer {
   width: 97%;
   max-width: 97%;
   text-align: right;

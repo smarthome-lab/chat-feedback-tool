@@ -25,9 +25,9 @@
       <div class="ui mini input">
         <img src="../assets/filter.png" alt="filter" id="filterIcon" width="25px" height="25px" />
 
-        <div style="width: 130px;">
+        <div style="width: 165px;">
           <label for="userStatusFilter">Account Status</label>
-          <select v-model="filter.userStatus" @change="handleNewSearchInput" class="ui floating dropdown" id="userStatusFilter">
+          <select v-model="filter.userStatus" @change="handleNewSearchInput" class="ui floating selection dropdown" id="userStatusFilter">
           <option>Egal</option>
           <option>Aktiv</option>
           <option>Deaktiviert</option>
@@ -35,18 +35,18 @@
         </select>
 
       </div>
-        <div style="width: 120px;">
+        <div style="width: 165px;">
         <label for="verifiedFilter">Verifiziert</label>
-        <select v-model="filter.verified" @change="handleNewSearchInput" class="ui floating dropdown" id="verifiedFilter">
+        <select v-model="filter.verified" @change="handleNewSearchInput" class="ui floating selection dropdown" id="verifiedFilter">
           <option>Egal</option>
           <option>Verifiziert</option>
           <option>Nicht Verifiziert</option>
         </select>
       </div>
 
-        <div style="width: 80px;">
+        <div style="width: 115px;">
         <label for="roleFilter">Rolle</label>
-        <select v-model="filter.role" @change="handleNewSearchInput" class="ui floating dropdown" id="roleFilter">
+        <select v-model="filter.role" @change="handleNewSearchInput" class="ui floating selection dropdown" id="roleFilter">
           <option>Egal</option>
           <option>Keine Rolle</option>
           <option>Admin</option>
