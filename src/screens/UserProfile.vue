@@ -302,8 +302,8 @@ table {
 }
 
 .tablePart {
-  width: 32%;
-  max-width: 32%;
+  width: 30%;
+  max-width: 30%;
   margin-right: 10px !important;
   float: left;
   cursor: default;
