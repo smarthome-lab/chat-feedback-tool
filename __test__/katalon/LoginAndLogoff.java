@@ -9,7 +9,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 
-public class Login {
+public class LoginAndLogoff {
   private WebDriver driver;
   private String baseUrl;
   private boolean acceptNextAlert = true;
@@ -23,16 +23,19 @@ public class Login {
   }
 
   @Test
-  public void testLogin() throws Exception {
+  public void testLoginAndLogoff() throws Exception {
     driver.get("https://feedback.hschat.app/#/");
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[1]")).click();
+    driver.findElement(By.xpath("//div[@id='app']/div/div/div")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::span[1]")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[1]")).clear();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[1]")).sendKeys("admin@hschat.app");
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).clear();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).sendKeys("Admin123");
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::button[1]")).click();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[1]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::span[1]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Users'])[1]/following::div[4]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Admin User'])[1]/following::div[2]")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[1]")).clear();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[1]")).sendKeys("admin@hschat.app");
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).clear();
