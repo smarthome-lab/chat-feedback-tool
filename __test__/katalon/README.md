@@ -18,6 +18,7 @@ How to create a simple Maven project (https://wiki.jasig.org/display/UPM32/Creat
 
 Step 2. Add the following dependencies to your pom.xml file:
 
+```
 <dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
@@ -38,15 +39,17 @@ Step 2. Add the following dependencies to your pom.xml file:
     <artifactId>selenium-server</artifactId>
     <version>2.25.0</version>    
 </dependency>
+```
 
 Step 3. Copy this Java files into the Maven Project.
 
 Step 4. Add the following (and other IDE - highlighted) imports to the file:
-
+```
 import static org.junit.Assert.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+```
 
 Step 5. Run the tests with Run As.. --> JUnit Test
 
