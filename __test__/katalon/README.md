@@ -1,4 +1,4 @@
-Katalon automatic systemtests
+**Katalon automatic systemtests**
 _____________________________
 
 Due to the fact, that the feedback tool concentrates on a website as an UI it is possible to use Website testing mechanisms like Selenium or (Katalon in our case)
