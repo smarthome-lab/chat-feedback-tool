@@ -5,7 +5,7 @@ Due to the fact, that the feedback tool concentrates on a website as an UI it is
 
 How to run this Tests / import them:
 
-Prequisites: Firefox Browser (alternatively Chrome), IDE with JUnit Runtime installed
+Prequisites: Firefox Browser (newest version 64), IDE with JUnit Runtime installed, Geckodriver (available at https://github.com/mozilla/geckodriver/releases)
 
 *These tests are captured with Katalon, a popular browser extension for Google Chrome and exported in Java Source Files.
 All Tests are compatible to IDEs with a JUnit Runtime Environment installed (e.g. STS, Eclipse...).*
@@ -20,30 +20,31 @@ Step 2. Add the following dependencies to your pom.xml file:
 
 ```
 <dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.7</version>
-    <scope>test</scope>
-</dependency>    
-<dependency>
-        <groupId>org.seleniumhq.selenium</groupId>
-        <artifactId>selenium-java</artifactId>
-        <version>2.25.0</version>           
-</dependency>    
-<dependency>
-    <groupId>org.seleniumhq.selenium</groupId>
-    <artifactId>selenium-firefox-driver</artifactId>
-    <version>2.33.0</version>
-</dependency> 
-<dependency><groupId>org.seleniumhq.selenium</groupId>
-    <artifactId>selenium-server</artifactId>
-    <version>2.25.0</version>    
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.7</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>3.141.59</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-firefox-driver</artifactId>
+			<version>3.141.59</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-server</artifactId>
+			<version>3.141.59</version>
 </dependency>
 ```
 
-Step 3. Copy this Java files into the Maven Project.
+Step 3. Copy this Java files and the Geckodriver (same level as pom.xml) into the Maven Project.
 
-Step 4. Add the following (and other IDE - highlighted) imports to the file:
+Step 4. Add the following (and other IDE - highlighted) imports to the file (if needed):
 ```
 import static org.junit.Assert.*;
 import org.junit.After;
@@ -51,21 +52,16 @@ import org.junit.Before;
 import org.junit.Test;
 ```
 
-Step 5. Run the tests with Run As.. --> JUnit Test
+Step 5. Add the following line of code to your tests above the driver initialisation
+```
+System.setProperty("webdriver.gecko.driver", "geckodriver");
+```
+
+and change the path and file suffix like its named in the file system
+
+Step 6. Run the tests with Run As.. --> JUnit Test
 
 For all tests (except the LoginLogoff Test) it is needed to be logged in to the https://feedback.hschat.app/#/ site e.g. with the following User Data:
 
 Email: admin@hschat.app
 Password: Admin123
-
-For Google Chrome Support add this to your pom.xml (Version differs https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-chrome-driver)
-
-<dependency>
-<groupId>org.seleniumhq.selenium</groupId>
-<artifactId>selenium-chrome-driver</artifactId>
-<version>2.50.0</version>
-</dependency>
-
-and change Occurences of *Webdriver driver = new FirefoxDriver()* to *... driver = new ChromeDriver()* 
-
-(more here.. https://stackoverflow.com/questions/35867102/how-to-work-with-selenium-chrome-driver-in-maven-without-chromedriver-exe)
