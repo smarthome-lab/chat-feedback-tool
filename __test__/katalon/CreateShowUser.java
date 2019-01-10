@@ -1,4 +1,4 @@
-package com.example.tests;
+package com.test.katalon;
 
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +17,7 @@ public class CreateShowUser {
 
   @Before
   public void setUp() throws Exception {
+	System.setProperty("webdriver.gecko.driver", "geckodriver");
     driver = new FirefoxDriver();
     baseUrl = "https://www.katalon.com/";
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -24,26 +25,32 @@ public class CreateShowUser {
 
   @Test
   public void testCreateShowUser() throws Exception {
-    driver.get("https://feedback.hschat.app/?#/feedback");
+    driver.get("https://feedback.hschat.app/#/");
+    driver.findElement(By.xpath("//div[@id='app']/div/div/div")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).click();
+    // ERROR: Caught exception [ERROR: Unsupported command [doubleClick | xpath=(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2] | ]]
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::span[1]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[1]")).clear();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[1]")).sendKeys("admin@hschat.app");
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).clear();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).sendKeys("Admin123");
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::span[1]")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Feedback'])[1]/following::button[1]")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Rolle'])[1]/following::button[1]")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Vorname'])[1]/following::input[1]")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Vorname'])[1]/following::input[1]")).clear();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Vorname'])[1]/following::input[1]")).sendKeys("Prename");
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Vorname'])[1]/following::input[1]")).sendKeys("Testtestter");
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Nachname'])[1]/following::input[1]")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Nachname'])[1]/following::input[1]")).clear();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Nachname'])[1]/following::input[1]")).sendKeys("Lastname");
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Nachname'])[1]/following::input[1]")).sendKeys("Test");
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='E-Mail'])[1]/following::input[1]")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='E-Mail'])[1]/following::input[1]")).clear();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='E-Mail'])[1]/following::input[1]")).sendKeys("email@hs-coburg.de");
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='E-Mail'])[1]/following::input[1]")).sendKeys("somethin@hs-coburg.de");
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Kennung'])[1]/following::input[1]")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Kennung'])[1]/following::input[1]")).clear();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Kennung'])[1]/following::input[1]")).sendKeys("lapr1500");
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Kennung'])[1]/following::input[1]")).sendKeys("tete1502");
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Benutzererstellung'])[1]/following::button[1]")).click();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Feedback'])[1]/following::button[1]")).click();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Lastname'])[1]/following::td[1]")).click();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Benutzerprofil für Prename Lastname'])[1]/following::button[1]")).click();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Speichern'])[1]/following::button[1]")).click();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Feedback'])[1]/following::button[1]")).click();
   }
 
   @After

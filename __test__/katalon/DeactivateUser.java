@@ -1,4 +1,4 @@
-package com.example.tests;
+package com.test.katalon;
 
 import java.util.regex.Pattern;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +17,7 @@ public class DeactivateUser {
 
   @Before
   public void setUp() throws Exception {
+	System.setProperty("webdriver.gecko.driver", "geckodriver");
     driver = new FirefoxDriver();
     baseUrl = "https://www.katalon.com/";
     driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -24,8 +25,17 @@ public class DeactivateUser {
 
   @Test
   public void testDeactivateUser() throws Exception {
-    driver.get("https://feedback.hschat.app/?#/users");
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Nutzer'])[1]/following::td[1]")).click();
+    driver.get("https://feedback.hschat.app/#/");
+    driver.findElement(By.xpath("//div[@id='app']/div/div/div")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::span[1]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[1]")).clear();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[1]")).sendKeys("admin@hschat.app");
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).clear();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::input[2]")).sendKeys("Admin123");
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Log-in to the HSChat Admin Tool'])[1]/following::span[1]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Feedback'])[1]/following::button[1]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Test'])[1]/following::td[1]")).click();
     driver.findElement(By.name("public")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Feedback'])[1]/following::button[1]")).click();
     driver.findElement(By.id("userStatusFilter")).click();
@@ -33,8 +43,8 @@ public class DeactivateUser {
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Test'])[1]/following::td[1]")).click();
     driver.findElement(By.name("public")).click();
     driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Feedback'])[1]/following::button[1]")).click();
-    driver.findElement(By.id("userStatusFilter")).click();
-    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Nutzer'])[1]/following::td[1]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Nutzer'])[2]/following::td[1]")).click();
+    driver.findElement(By.xpath("(.//*[normalize-space(text()) and normalize-space(.)='Feedback'])[1]/following::button[1]")).click();
   }
 
   @After
