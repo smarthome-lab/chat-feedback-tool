@@ -52,7 +52,7 @@ import org.junit.Before;
 import org.junit.Test;
 ```
 
-Step 5. Add the following line of code to your tests above the driver initialisation
+Step 5. Add (if needed) the following line of code to your tests above the driver initialisation
 ```
 System.setProperty("webdriver.gecko.driver", "geckodriver");
 ```
@@ -60,8 +60,3 @@ System.setProperty("webdriver.gecko.driver", "geckodriver");
 and change the path and file suffix like its named in the file system
 
 Step 6. Run the tests with Run As.. --> JUnit Test
-
-For all tests (except the LoginLogoff Test) it is needed to be logged in to the https://feedback.hschat.app/#/ site e.g. with the following User Data:
-
-Email: admin@hschat.app
-Password: Admin123
